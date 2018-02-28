@@ -9,6 +9,7 @@ import firebase from './firebaseInit';
 import WelcomeScreen from './screens/WelcomeScreen';
 import AuthScreen from './screens/AuthScreen';
 import MainScreen from './screens/MainScreen';
+import SwipeScreen from './screens/SwipeScreen';
 import reducers from './src/reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
@@ -18,6 +19,7 @@ export default class App extends Component {
     const MainNavigator = TabNavigator({
       welcome: { screen: WelcomeScreen },
       auth: { screen: AuthScreen },
+      swipe: { screen: SwipeScreen },
       main: {
         screen: StackNavigator({
           mainScreen: { screen: MainScreen }
