@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Button, Dimensions,
-  Keyboard, View, Text } from 'react-native';
+  Keyboard, View, Text, TextInput } from 'react-native';
 import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLoginActions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -13,8 +13,7 @@ class AuthScreen extends Component {
 
   onAuthComplete(props) {
     if (props.user) {
-      // change this to navigate to next screen
-      console.log('user found');
+      this.props.navigation.navigate('mainScreen');
     }
   }
 
@@ -38,9 +37,10 @@ class AuthScreen extends Component {
     }
     return (
       <Button
-        onPress={this.signInButtonPressed.bind(this)}
-        style={styles.signInButtonStyle}
         title='Sign In'
+        style={styles.signInButtonStyle}
+        onPress={this.signInButtonPressed.bind(this)}
+        // onPress={() => this.props.navigation.navigate('mainScreen')}
       />
     );
   }
@@ -48,7 +48,31 @@ class AuthScreen extends Component {
   render() {
     return (
         <View style={styles.mainViewStyle}>
-          <Text>Hello</Text>
+          <View style={{ height: 80, width: SCREEN_WIDTH * 0.85 }}>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder='email@gmail.com'
+              autoCorrect={false}
+              autoCapitalize='none'
+              onChangeText={this.onEmailChange.bind(this)}
+              value={this.props.email}
+            />
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder='password'
+              autoCorrect={false}
+              secureTextEntry
+              autoCapitalize='none'
+              onChangeText={this.onPasswordChange.bind(this)}
+              value={this.props.password}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.errorTextStyle}>
+                {this.props.error}
+              </Text>
+              {this.renderButton()}
+            </View>
+          </View>
         </View>
     );
   }
@@ -65,7 +89,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 5,
     height: 40,
-    fontSize: 20
+    fontSize: 20,
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderWidth: 1
+  },
+  signInButtonStyle: {
+    flex: 1,
+    alignSelf: 'center'
+  },
+  errorTextStyle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
   }
 });
 

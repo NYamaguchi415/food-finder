@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux';
 import { StyleSheet, View } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator } from 'react-navigation';
 import ReduxThunk from 'redux-thunk';
 
 import firebase from './firebaseInit';
 import WelcomeScreen from './screens/WelcomeScreen';
 import AuthScreen from './screens/AuthScreen';
+import MainScreen from './screens/MainScreen';
 import reducers from './src/reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
@@ -16,7 +17,12 @@ export default class App extends Component {
   render() {
     const MainNavigator = TabNavigator({
       welcome: { screen: WelcomeScreen },
-      auth: { screen: AuthScreen }
+      auth: { screen: AuthScreen },
+      main: {
+        screen: StackNavigator({
+          mainScreen: { screen: MainScreen }
+        })
+      }
     }, {
       navigationOptions: {
         tabBarVisible: false
