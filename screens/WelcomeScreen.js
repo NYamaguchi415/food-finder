@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
+import firebase from '../firebaseInit';
 
 class WelcomeScreen extends Component {
   componentWillMount() {
-    console.log('test test');
+    this.props.navigation.navigate('swipe')
   }
 
   render() {
+    firebase.database().ref('restaurants').once('value')
+    .then((snap)=>{
+      console.log(snap.val());
+    })
+
     return (
       <View style={styles.mainViewStyle}>
         <Text>
