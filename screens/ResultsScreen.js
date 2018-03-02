@@ -19,8 +19,7 @@ class ResultsScreen extends Component {
         }
         let eventId = "event_id";
         firebase.database().ref(`events/${eventId}/restaurants`).once('value')
-        .then((snapshot)=>{       
-            console.log('resturants in snap',snapshot.val());
+        .then((snapshot)=>{
             this.setState({
                 restaurants: snapshot.val()
             }) 
@@ -28,14 +27,6 @@ class ResultsScreen extends Component {
         
     }
     render() {
-        let restaurants = [];
-        if (this.state.restaurants) {
-            Object.keys(this.state.restaurants).forEach((key)=>{
-                let restaurant = this.state.restaurants[key];
-                console.log('in for each', restaurant)
-                restaurants.push(restaurant);
-            })
-        }
         return(
             <View style={styles.mainViewStyle}>
                 <View style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
@@ -46,7 +37,6 @@ class ResultsScreen extends Component {
                     {
                             Object.keys(this.state.restaurants).map((key)=>{
                                 let restaurant = this.state.restaurants[key];
-                                console.log('in for each', restaurant)
                                     return (
                                     <ResultRow 
                                         styles={styles}

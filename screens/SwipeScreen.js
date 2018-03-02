@@ -38,8 +38,6 @@ class SwipeScreen extends Component {
             firebase.database().ref('restaurants').once('value')
             .then((snap)=>{
                 suggestedRestaurants = snap.val();
-                console.log('suggestedRestaurants', suggestedRestaurants);
-                console.log('events');        
 
                 let event = snapshot.child(this.state.eventId).val();
                 const restaurants = event.restaurants;
@@ -50,10 +48,6 @@ class SwipeScreen extends Component {
                     restaurantList.push(
                         {key: key, restaurant: suggestedRestaurants[key]})
                 })
-                console.log(keys);
-                console.log(restaurants);
-                console.log('activeRestaurant', Object.keys(restaurants)[0] )
-                console.log('activeRestaurant', restaurantList[0] )
                 this.setState({
                     event,
                     restaurantList,
