@@ -33,11 +33,23 @@ export const loginUser = ({ email, password }) => {
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
 				firebase.auth().createUserWithEmailAndPassword(email, password)
-					.then(user => loginUserSuccess(dispatch, user))
+					.then(user => createUserSuccess(dispatch, user, email))
 					.catch(() => loginUserFail(dispatch));
 				console.log(error);
 			});
 	};
+};
+
+const writeUserData = (user, email) => {
+	const uid = user.uid;
+	firebase.database().ref(`users/${uid}`).set({
+		email
+	});
+};
+
+const createUserSuccess = (dispatch, user, email) => {
+	loginUserSuccess(dispatch, user);
+	writeUserData(user, email);
 };
 
 const loginUserSuccess = (dispatch, user) => {
@@ -45,7 +57,6 @@ const loginUserSuccess = (dispatch, user) => {
 		type: LOGIN_USER_SUCCESS,
 		payload: user
 	});
-	console.log('signed in');
 };
 
 const loginUserFail = (dispatch) => {

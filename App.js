@@ -25,9 +25,14 @@ export default class App extends Component {
       swipe: { screen: SwipeScreen },
       results: { screen: ResultsScreen },
       main: {
-        screen: StackNavigator({
+        screen: TabNavigator({
           mainScreen: { screen: MainScreen },
           yelpScreen: { screen: YelpTestScreen }
+        }, {
+          navigationOptions: {
+            tabBarVisible: false
+          },
+          lazy: true
         })
       }
     }, {
