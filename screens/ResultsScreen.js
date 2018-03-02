@@ -18,13 +18,18 @@ class ResultsScreen extends Component {
             restaurants: {}
         }
         let eventId = "event_id";
-        firebase.database().ref(`events/${eventId}/restaurants`).once('value')
-        .then((snapshot)=>{
-            this.setState({
-                restaurants: snapshot.val()
-            }) 
-        })
-        
+
+        firebase.database().ref('users').child(this.props.user.uid).once('value')
+        .then((userSnapshot)=>{
+            const eventId = userSnapshot.val().currentEvent_id;
+            // this.setState({eventId});
+            firebase.database().ref(`events/${eventId}/restaurants`).once('value')
+            .then((snapshot)=>{
+                this.setState({
+                    restaurants: snapshot.val()
+                }) 
+            })    
+        })    
     }
     render() {
         return(

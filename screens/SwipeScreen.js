@@ -16,7 +16,6 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 class SwipeScreen extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.user);
         let restaurants = {};
         let index = 0;
         // const eventId = 'event_id'
@@ -42,11 +41,10 @@ class SwipeScreen extends Component {
         }
 
         firebase.database().ref('users').child(this.props.user.uid).once('value')
-            .then((snapshot)=>{
+            .then((userSnapshot)=>{
                 firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
 
-                const eventId = snapshot.val().currentEvent_id;
-                console.log(snapshot.val());
+                const eventId = userSnapshot.val().currentEvent_id;
                 this.setState({eventId});
 
                 firebase.database().ref('events').once('value')
