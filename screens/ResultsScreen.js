@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 
 import firebase from '../firebaseInit';
-import {VoteList} from './SwipeScreen';
+import {ResultRow} from './components/ResultRow';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -26,32 +27,36 @@ class ResultsScreen extends Component {
     }
     render() {
         return(
-            <View style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: SCREEN_HEIGHT *0.8
-            }}>
-                <Text>
-                    Winners
-                </Text>
-                {
-                    Object.keys(this.state.restaurants).map((restaurant)=>{
-                        return (
-                            <VoteList 
-                                restaurantName={restaurant}
-                                votes={this.state.restaurants[restaurant].votes}
-                            />
-                        )
-                    })
+            <View style={styles.mainViewStyle}>
+                <View style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
+                    <View>
+                    <Text>
+                        Winners
+                    </Text>
+                    {
+                        Object.keys(this.state.restaurants).map((restaurant)=>{
+                            return (
+                                <ResultRow 
+                                    styles={styles}
+                                    restaurantName={restaurant}
+                                    votes={this.state.restaurants[restaurant].votes}
+                                />
+                            )
+                        })
 
-                }
+                    }
+                    </View>
+                </View>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    resultRow: {
+        fontSize: 22,
+        color: 'blue'
+    },
     mainViewStyle: {
         flex: 1,
         alignItems: 'center',

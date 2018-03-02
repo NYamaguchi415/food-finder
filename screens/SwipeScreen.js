@@ -4,128 +4,14 @@ import {
     ActivityIndicator, StyleSheet, Button, Dimensions,
     Keyboard, View, Text, TextInput, Image, TouchableOpacity
 } from 'react-native';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import SwipeCards from 'react-native-swipe-cards';
 import firebase from '../firebaseInit';
 
+import ActivePlace from './components/ActivePlace';
+import InactivePlace from './components/InactivePlace';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
-export class VoteList extends Component {
-    render() {
-        return(
-            <Text style={styles.errorTextStyle}>
-                {this.props.restaurantName}
-                {this.props.votes}
-            </Text>
-        )
-    }
-}
-
-class Card extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-  
-    render() {
-      return (
-        <View style={[styles.card, {backgroundColor: this.props.backgroundColor}]}>
-          <Text>{this.props.text}</Text>
-        </View>
-      )
-    }
-  }
-
-
-class ActivePlace extends Component {
-    onSwipeLeft(state) {
-        console.log('left');
-    }
-    onSwipe(dir, state) {
-        console.log('swipe')
-    }
-
-    renderOld() {
-    }
-    render() {
-        return(
-            <View 
-            style={{
-                justifyContent: 'center',
-                alignItems: 'center'        
-            }}
-            >
-             <TouchableOpacity>
-                    <Image style={
-                        {width:100, height: 100,
-                        }
-                        } source={{uri:this.props.restaurant.uri}} />
-            </TouchableOpacity>
-                <Text style={styles.errorTextStyle}>
-                    {this.props.restaurantName}
-                    {this.props.restaurant.votes}
-                </Text>
-                <View
-                style={{
-                    flexDirection: 'row'
-                }}
-                >
-                    {this.props.renderCancelButton()}
-                    {this.props.renderConfirmButton()}
-                </View>
-                <Text style={styles.errorTextStyle}>
-                    {this.props.time}
-                </Text>
-            </View>
-                
-        )
-    }
-}
-
-class InactiveState extends Component {
-    render() {
-        let outOfMatchesMessage;
-        let outOfTimeMessage;
-        if (this.props.outOfMathes) {
-            outOfMatchesMessage =  (
-                <Text style={styles.errorTextStyle}>
-                    Out of matches womp womp
-                </Text>
-            )
-        }
-
-        if (this.props.outOfTime) {
-            outOfTimeMessage =  (
-                <Text style={styles.errorTextStyle}>
-                    You ran out of time
-                </Text>
-            )
-
-            setTimeout(()=>{
-                this.props.navigation.navigate('results')
-            },100);
-        } else {
-            outOfTimeMessage =  (
-                <Text style={styles.errorTextStyle}>
-                    {this.props.time}
-                </Text>
-            )            
-        }
-        return(
-            <View>
-                {
-                    outOfMatchesMessage                    
-                }
-                {
-                    outOfTimeMessage
-                }
-            </View>
-        )
-    }
-}
-
-
-
 
 class SwipeScreen extends Component {
     constructor(props) {
@@ -137,7 +23,7 @@ class SwipeScreen extends Component {
                 {text: 'hey', backgroundColor: 'white'}
             ],
             restaurantList: [],
-            time: 30,
+            time: 2,
             outOfTime: false,
             index: 0,
             restaurants,
@@ -267,6 +153,7 @@ class SwipeScreen extends Component {
             */
         );
     }
+    
     renderConfirmButton() {
         if (this.props.loading) {
             return <ActivityIndicator size='large' />;
@@ -305,6 +192,7 @@ class SwipeScreen extends Component {
     showActiveRestaurant() {
         return (
             <ActivePlace 
+            styles={this.styles}
             time={this.state.time}
             renderConfirmButton={this.renderConfirmButton.bind(this)}
             renderCancelButton={this.renderCancelButton.bind(this)}
@@ -316,7 +204,8 @@ class SwipeScreen extends Component {
 
     showInActive() {
         return  (
-            <InactiveState 
+            <InactivePlace 
+                styles={styles}
                 navigation={this.props.navigation}
                 outOfMathes={this.state.outOfMathes}
                 outOfTime={this.state.outOfTime}
@@ -324,57 +213,46 @@ class SwipeScreen extends Component {
         )
     }
 
-    realRender() {
-        return (
-            <View style={styles.mainViewStyle}>
-                <View style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.errorTextStyle}>
-                            {this.props.error}
-                        </Text>
-                        <View
-                            style={{
-                                // alignItems:'flex-start'
-                                // height: 100
-                            }}
-                        >
-                        {
-                            activePlace
-                        }
-                        </View>
-                        <View style={{ flex: 1 }}>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        );
-
-    }
-    alternativeRender() {
-    }
-    render() {
-
-
-        let activePlace;
-        if (this.state.activeRestaurant === '' || this.state.outOfTime) {
-            activePlace = this.showInActive();
-        } else {
-            activePlace = this.showActiveRestaurant();
-        }
-        return (
-            <SwipeCards
+    renderSwipeCards() {
+        return (<SwipeCards
                 cards={this.state.restaurantList}
                 renderCard={(cardData) => <ActivePlace 
+                    styles={styles}
+                    time={this.state.time}
                     restaurant={cardData.restaurant} 
                     restaurantName={cardData.activeRestaurant} 
                     renderConfirmButton={this.renderConfirmButton.bind(this)}
                     renderCancelButton={this.renderCancelButton.bind(this)}
                     />}
-                handleYup={this.handleYup}
-                handleNope={this.handleNope}
-                handleMaybe={this.handleMaybe}
-                hasMaybeAction
-          />
+                renderNoMoreCards={()=>
+                    <InactivePlace 
+                        styles={styles}
+                        navigation={this.props.navigation}
+                        outOfMathes={this.state.outOfMathes}
+                        outOfTime={this.state.outOfTime}
+                        time={this.state.time}/>
+                }
+                handleYup={this.confirmButtonPressed.bind(this)}
+                handleNope={this.cancelButtonPressed.bind(this)}                
+        />)
+    }
+    render() {
+        let activePlace;
+        if (this.state.activeRestaurant === '' || this.state.outOfTime) {
+            activePlace = this.showInActive();
+        } else {
+            activePlace = this.renderSwipeCards();
+        }
+        return (
+        <View style={styles.mainViewStyle}>
+            <View style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
+                <View style={{ flex: 1 }}>
+                {
+                    activePlace
+                }
+                </View>
+            </View>
+        </View>
         )
     }
 }
