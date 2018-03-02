@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 class WelcomeScreen extends Component {
   componentWillMount() {
-    //this.props.navigation.navigate('filterScreen');
+    this.props.navigation.navigate('mainScreen');
   }
-
+ 
   render() {
     return (
       <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('auth')}>

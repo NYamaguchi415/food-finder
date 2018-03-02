@@ -11,12 +11,12 @@ import AuthScreen from './screens/AuthScreen';
 import MainScreen from './screens/MainScreen';
 import SwipeScreen from './screens/SwipeScreen';
 import ResultsScreen from './screens/ResultsScreen';
-
-import YelpTestScreen from './screens/YelpTestScreen'
+import FilterScreen from './screens/FilterScreen';
+import YelpTestScreen from './screens/YelpTestScreen';
 import reducers from './src/reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-
+ 
 export default class App extends Component {
   render() {
     const MainNavigator = TabNavigator({
@@ -27,6 +27,7 @@ export default class App extends Component {
       main: {
         screen: TabNavigator({
           mainScreen: { screen: MainScreen },
+          filterScreen: { screen: FilterScreen },
           yelpScreen: { screen: YelpTestScreen }
         }, {
           navigationOptions: {
