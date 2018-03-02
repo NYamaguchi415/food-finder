@@ -15,7 +15,7 @@ import YelpTestScreen from './screens/YelpTestScreen';
 import reducers from './src/reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-
+ 
 export default class App extends Component {
   render() {
     const MainNavigator = TabNavigator({
