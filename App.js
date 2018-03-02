@@ -22,9 +22,14 @@ export default class App extends Component {
       auth: { screen: AuthScreen },
       swipe: { screen: SwipeScreen },
       main: {
-        screen: StackNavigator({
+        screen: TabNavigator({
           mainScreen: { screen: MainScreen },
           yelpScreen: { screen: YelpTestScreen }
+        }, {
+          navigationOptions: {
+            tabBarVisible: false
+          },
+          lazy: true
         })
       }
     }, {

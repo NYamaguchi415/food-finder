@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 
 class WelcomeScreen extends Component {
   componentWillMount() {
-    console.log('test test');
+    this.props.navigation.navigate('main');
   }
 
   render() {
     return (
-      <View style={styles.mainViewStyle}>
-        <Text>
-          Welcome!
-        </Text>
-        <Button
-          title='Press This'
-          onPress={() => this.props.navigation.navigate('auth')}
-        />
-      </View>
+      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('auth')}>
+        <View style={styles.mainViewStyle}>
+          <Text style={styles.titleTextStyle}>
+            Food Finder
+          </Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
-
 }
 
 function mapStateToProps({ auth }) {
@@ -36,4 +33,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  titleTextStyle: {
+    fontSize: 40,
+    fontWeight: 'bold'
+  }
 });
