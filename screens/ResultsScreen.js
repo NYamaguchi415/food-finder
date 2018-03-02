@@ -37,10 +37,11 @@ class ResultsScreen extends Component {
                     {
                             Object.keys(this.state.restaurants).map((key)=>{
                                 let restaurant = this.state.restaurants[key];
+                                console.log(restaurant);
                                     return (
                                     <ResultRow 
                                         styles={styles}
-                                        names={restaurant.name}                                    
+                                        name={restaurant.name}                                    
                                         no={restaurant.no}
                                         yes={restaurant.yes}
                                     />        
