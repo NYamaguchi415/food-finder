@@ -16,6 +16,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 class SwipeScreen extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props.user);
         let restaurants = {};
         let index = 0;
         const eventId = 'event_id'
@@ -361,8 +362,8 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = ({ }) => {
-    return {}
+const mapStateToProps = ({auth }) => {
+    return { user: auth.user };
 };
 
 export default connect(mapStateToProps, {

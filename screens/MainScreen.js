@@ -60,6 +60,8 @@ class MainScreen extends Component {
       console.log('oncomplete');
       console.log(val);
     })
+
+    this.props.navigation.navigate('swipe');
   }
 
   render() {
