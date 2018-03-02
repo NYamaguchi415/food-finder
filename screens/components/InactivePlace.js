@@ -16,7 +16,8 @@ export default class InactivePlace extends Component {
         if (this.props.outOfMathes) {
             outOfMatchesMessage =  (
                 <Text style={this.props.styles.errorTextStyle}>
-                    Out of matches womp womp
+                    Out of matches
+                    Count Down
                 </Text>
             )
         }
@@ -30,11 +31,12 @@ export default class InactivePlace extends Component {
 
             setTimeout(()=>{
                 this.props.navigation.navigate('results')
-            },0);
+            },1000);
         } else {
+            let minutes = parseInt(this.props.time / 60);
             outOfTimeMessage =  (
                 <Text style={this.props.styles.errorTextStyle}>
-                    {this.props.time}
+                    {minutes} minutes and {this.props.time % 60} seconds
                 </Text>
             )            
         }

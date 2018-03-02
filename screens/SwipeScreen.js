@@ -24,22 +24,33 @@ class SwipeScreen extends Component {
             eventId: eventId,
             event: null,
             restaurantList: [],
-            time: 1,
+            time: 180,
             outOfTime: false,
             index: 0,
             suggestedRestaurants,
             activeRestaurant: '',
-            outOfMathes: false
+            outOfMathes: false,
+            users: 0
         };
 
+        const callback = (snapshot)=>{
+            if (snapshot.val() ===1) {
+                this.props.navigation.navigate('results')
+                console.log('match happened!!!');
+            }
+        }
+
+        firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
 
         firebase.database().ref('events').once('value')
-        .then((snapshot)=>{        
+        .then((snapshot)=>{
             firebase.database().ref('restaurants').once('value')
             .then((snap)=>{
                 suggestedRestaurants = snap.val();
 
                 let event = snapshot.child(this.state.eventId).val();
+                const users = event.users ?  Object.keys(event.users).length: -1;
+
                 const restaurants = event.restaurants;
                 const restaurantList = []
                 let keys = Object.keys(restaurants);
@@ -52,17 +63,12 @@ class SwipeScreen extends Component {
                     event,
                     restaurantList,
                     restaurants,
-                    activeRestaurant: restaurantList[0].key
+                    activeRestaurant: restaurantList[0].key,
+                    users
                 })
     
             })    
         })
-        const callback = 
-        firebase.database().ref('events').on('value',(snapshot)=>{
-                this.setState({
-                    restaurants: snapshot.val()
-                })
-        });
 
         updateTime = ()=> {
             const time = this.state.time -1;
@@ -105,7 +111,12 @@ class SwipeScreen extends Component {
             } else if (!commited) {
                 console.log('not commited');
             } else {
-                console.log('success');
+                const updatedVotes = snapshot.val();
+
+                if (updatedVotes === this.state.users) {
+                    firebase.database().ref(`events/${this.state.eventId}`).child('match').set(1);
+                    return
+                }
                 // const index = this.state.index +1;
                 const index = this.state.index;
                 const restaurants = this.state.restaurantList;
