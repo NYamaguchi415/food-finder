@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = ({ }) => {
-    return {}
+const mapStateToProps = ({ auth }) => {
+    return {user: user.auth}
 };
 
 export default connect(mapStateToProps, {

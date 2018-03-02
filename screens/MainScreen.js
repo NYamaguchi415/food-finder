@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, Button, Dimensions, StyleSheet } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
+import { connect } from 'react-redux';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class MainScreen extends Component {
-  
+
   static navigationOptions = {
     headerTitle: 'Food-Finder',
     headerRight: (
@@ -26,6 +27,14 @@ class MainScreen extends Component {
   componentWillMount() {
     //const self = this;
     const url = 'users';
+    firebase.database().ref('users').child(this.props.user.uid).once('value')
+    .then((userSnapshot)=>{
+        const eventId = userSnapshot.val().currentEvent_id;
+        console.log(eventId);
+        if (eventId) {
+              this.props.navigation.navigate('swipe');
+        }});
+        
     firebase.database().ref(url).once('value', (snapshot) => {
       const result = snapshot.val();
       const users = [];
@@ -103,5 +112,10 @@ class MainScreen extends Component {
     );
   }
 }
+function mapStateToProps({ auth }) {
+  return { user: auth.user };
+}
 
-export default MainScreen;
+export default connect(mapStateToProps)(MainScreen);
+
+// export default MainScreen;

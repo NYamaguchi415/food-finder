@@ -42,10 +42,10 @@ class SwipeScreen extends Component {
 
         firebase.database().ref('users').child(this.props.user.uid).once('value')
             .then((userSnapshot)=>{
-                firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
 
                 const eventId = userSnapshot.val().currentEvent_id;
                 this.setState({eventId});
+                firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
 
                 firebase.database().ref('events').once('value')
                 .then((snapshot)=>{
@@ -111,7 +111,16 @@ class SwipeScreen extends Component {
         console.log('confirm button pressed');
         console.log(this.state.activeRestaurant);
         // firebase.database().ref(`restaurants/${this.state.activeRestaurant}/votes`)
-        firebase.database().ref(`events/${this.state.eventId}/restaurants/${this.state.activeRestaurant}/yes`)
+        console.log('active', this.state.activeRestaurant);
+        console.log(typeof this.state.activeRestaurant)
+        let state;
+        if (typeof this.state.activeRestaurant === 'string') {
+            state = this.state.activeRestaurant;
+        }
+         else {
+            state = this.state.activeRestaurant.key;
+        }
+        firebase.database().ref(`events/${this.state.eventId}/restaurants/${state}/yes`)
         .transaction((votes)=>{
             return votes + 1;
         }, (error, commited, snapshot) => {
@@ -122,9 +131,9 @@ class SwipeScreen extends Component {
             } else {
                 const updatedVotes = snapshot.val();
 
-                if (updatedVotes === this.state.users) {
+                if (updatedVotes === this.state.users || updatedVotes === 2) {
                     firebase.database().ref(`events/${this.state.eventId}`).child('match').set(1);
-                    return
+                    return;
                 }
                 // const index = this.state.index +1;
                 const index = this.state.index;
