@@ -17,10 +17,10 @@ export default class ActivePlace extends Component {
             }}>
                 <TouchableOpacity>
                     <Image style={{width:100, height: 100}}
-                        source={{uri:this.props.restaurant.uri}} />
+                        source={{uri:this.props.restaurant.picture}} />
                 </TouchableOpacity>
                 <Text style={this.props.styles.errorTextStyle}>
-                    {this.props.restaurantName}
+                    {this.props.restaurant.name}
                     {this.props.restaurant.votes}
                 </Text>
                 <View style={{flexDirection: 'row'}}>

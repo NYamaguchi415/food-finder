@@ -18,34 +18,53 @@ class SwipeScreen extends Component {
         super(props);
         let restaurants = {};
         let index = 0;
+        const eventId = 'event_id'
+        let suggestedRestaurants = {}
         this.state = {
-            cards: [
-                {text: 'hey', backgroundColor: 'white'}
-            ],
+            eventId: eventId,
+            event: null,
             restaurantList: [],
-            time: 2,
+            time: 1,
             outOfTime: false,
             index: 0,
-            restaurants,
+            suggestedRestaurants,
             activeRestaurant: '',
             outOfMathes: false
         };
-        firebase.database().ref('restaurants').once('value')
+
+
+        firebase.database().ref('events').once('value')
         .then((snapshot)=>{        
-            restaurants = snapshot.val();
-            console.log('constructor', restaurants);
-            const restaurantList = []
-            Object.keys(restaurants).forEach((key)=> {
-                restaurantList.push({name:key, restaurant: restaurants[key]})
-            })
-            this.setState({
-                restaurantList,
-                restaurants: restaurants,
-                activeRestaurant: Object.keys(restaurants)[0]
-            })
+            firebase.database().ref('restaurants').once('value')
+            .then((snap)=>{
+                suggestedRestaurants = snap.val();
+                console.log('suggestedRestaurants', suggestedRestaurants);
+                console.log('events');        
+
+                let event = snapshot.child(this.state.eventId).val();
+                const restaurants = event.restaurants;
+                const restaurantList = []
+                let keys = Object.keys(restaurants);
+                keys.forEach((key)=>{
+                    console.log('suggested of key', key, suggestedRestaurants[key]);
+                    restaurantList.push(
+                        {key: key, restaurant: suggestedRestaurants[key]})
+                })
+                console.log(keys);
+                console.log(restaurants);
+                console.log('activeRestaurant', Object.keys(restaurants)[0] )
+                console.log('activeRestaurant', restaurantList[0] )
+                this.setState({
+                    event,
+                    restaurantList,
+                    restaurants,
+                    activeRestaurant: restaurantList[0].key
+                })
+    
+            })    
         })
         const callback = 
-        firebase.database().ref('restaurants').on('value',(snapshot)=>{
+        firebase.database().ref('events').on('value',(snapshot)=>{
                 this.setState({
                     restaurants: snapshot.val()
                 })
@@ -66,10 +85,24 @@ class SwipeScreen extends Component {
         }
         let interval = setInterval(updateTime,1000);
     }
-    
+
+    shrinkList() {
+        let restaurantList = this.state.restaurantList;
+        restaurantList = restaurantList.slice(1)
+        let activeRestaurant = restaurantList[0];
+        this.setState({restaurantList, activeRestaurant});
+    }
+
     confirmButtonPressed() {
+        this.confirmAction();
+        this.shrinkList();
+    }
+    
+    confirmAction() {
         console.log('confirm button pressed');
-        firebase.database().ref(`restaurants/${this.state.activeRestaurant}/votes`)
+        console.log(this.state.activeRestaurant);
+        // firebase.database().ref(`restaurants/${this.state.activeRestaurant}/votes`)
+        firebase.database().ref(`events/${this.state.eventId}/restaurants/${this.state.activeRestaurant}/yes`)
         .transaction((votes)=>{
             return votes + 1;
         }, (error, commited, snapshot) => {
@@ -79,8 +112,9 @@ class SwipeScreen extends Component {
                 console.log('not commited');
             } else {
                 console.log('success');
-                const index = this.state.index +1;
-                const restaurants = this.state.restaurants;
+                // const index = this.state.index +1;
+                const index = this.state.index;
+                const restaurants = this.state.restaurantList;
                 // restaurants[this.state.activeRestaurant].votes += 1;
                 if (index >= Object.keys(restaurants).length) {
                     this.setState({
@@ -91,8 +125,10 @@ class SwipeScreen extends Component {
                     return;
                 } 
 
+                console.log(this.state.restaurantList[0].key);
                 const activeRestaurant = 
-                    Object.keys(this.state.restaurants)[index];
+                
+                    this.state.restaurantList[0].key;
                 this.setState({
                     restaurants,
                     activeRestaurant, 
@@ -103,24 +139,38 @@ class SwipeScreen extends Component {
     }
 
     cancelButtonPressed() {
-        const index = this.state.index +1;
-        const restaurants = this.state.restaurants;
-        let outOfMathes = false;
-        let activeRestaurant;
-        if (index >= Object.keys(restaurants).length) {
-            activeRestaurant = '';
-            outOfMathes = true;
-        } else {
-            activeRestaurant = Object.keys(this.state.restaurants)[index];
-        }
+        this.cancelAction();
+        this.shrinkList();
+    }
 
-        this.setState({
-            restaurants,
-            activeRestaurant, 
-            index,
-            outOfMathes
-        })
 
+
+    cancelAction() {
+        firebase.database().ref(`events/${this.state.eventId}/restaurants/${this.state.activeRestaurant}/no`)
+        .transaction((votes)=>{
+            return votes + 1;
+        }, (error, commited, snapshot) => {
+            const index = this.state.index
+            const restaurants = this.state.restaurantList;
+            let outOfMathes = false;
+            let activeRestaurant;
+            if (index >= Object.keys(restaurants).length) {
+                activeRestaurant = '';
+                outOfMathes = true;
+            } else {
+                activeRestaurant = 
+                this.state.restaurantList[0].key;
+            }
+    
+            this.setState({
+                restaurants,
+                activeRestaurant, 
+                index,
+                outOfMathes
+            });    
+        });
+    
+ 
 
     }
 
@@ -189,19 +239,6 @@ class SwipeScreen extends Component {
         console.log(snapshot.val());
     }
 
-    showActiveRestaurant() {
-        return (
-            <ActivePlace 
-            styles={this.styles}
-            time={this.state.time}
-            renderConfirmButton={this.renderConfirmButton.bind(this)}
-            renderCancelButton={this.renderCancelButton.bind(this)}
-            restaurant={this.state.restaurants[this.state.activeRestaurant]}
-            restaurantName={this.state.activeRestaurant}
-            />
-        )
-    }
-
     showInActive() {
         return  (
             <InactivePlace 
@@ -220,7 +257,6 @@ class SwipeScreen extends Component {
                     styles={styles}
                     time={this.state.time}
                     restaurant={cardData.restaurant} 
-                    restaurantName={cardData.activeRestaurant} 
                     renderConfirmButton={this.renderConfirmButton.bind(this)}
                     renderCancelButton={this.renderCancelButton.bind(this)}
                     />}

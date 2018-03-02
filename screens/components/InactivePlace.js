@@ -30,7 +30,7 @@ export default class InactivePlace extends Component {
 
             setTimeout(()=>{
                 this.props.navigation.navigate('results')
-            },100);
+            },0);
         } else {
             outOfTimeMessage =  (
                 <Text style={this.props.styles.errorTextStyle}>

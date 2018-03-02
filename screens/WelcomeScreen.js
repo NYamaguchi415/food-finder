@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 class WelcomeScreen extends Component {
   componentWillMount() {
-    this.props.navigation.navigate('main');
+    this.props.navigation.navigate('swipe');
   }
 
   render() {

@@ -15,10 +15,12 @@ class ResultsScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            restaurants: {}        
+            restaurants: {}
         }
-        firebase.database().ref('restaurants').once('value')
+        let eventId = "event_id";
+        firebase.database().ref(`events/${eventId}/restaurants`).once('value')
         .then((snapshot)=>{       
+            console.log('resturants in snap',snapshot.val());
             this.setState({
                 restaurants: snapshot.val()
             }) 
@@ -26,6 +28,14 @@ class ResultsScreen extends Component {
         
     }
     render() {
+        let restaurants = [];
+        if (this.state.restaurants) {
+            Object.keys(this.state.restaurants).forEach((key)=>{
+                let restaurant = this.state.restaurants[key];
+                console.log('in for each', restaurant)
+                restaurants.push(restaurant);
+            })
+        }
         return(
             <View style={styles.mainViewStyle}>
                 <View style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
@@ -34,16 +44,18 @@ class ResultsScreen extends Component {
                         Winners
                     </Text>
                     {
-                        Object.keys(this.state.restaurants).map((restaurant)=>{
-                            return (
-                                <ResultRow 
-                                    styles={styles}
-                                    restaurantName={restaurant}
-                                    votes={this.state.restaurants[restaurant].votes}
-                                />
+                            Object.keys(this.state.restaurants).map((key)=>{
+                                let restaurant = this.state.restaurants[key];
+                                console.log('in for each', restaurant)
+                                    return (
+                                    <ResultRow 
+                                        styles={styles}
+                                        names={restaurant.name}                                    
+                                        no={restaurant.no}
+                                        yes={restaurant.yes}
+                                    />        
                             )
                         })
-
                     }
                     </View>
                 </View>

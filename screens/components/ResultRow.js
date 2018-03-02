@@ -9,8 +9,9 @@ export class ResultRow extends Component {
     render() {
         return(
             <Text style={this.props.styles.resultRow}>
-                {this.props.restaurantName}
-                {this.props.votes}
+                Restaurant: {this.props.name}
+                No: {this.props.no}
+                Yes: {this.props.yes}
             </Text>
         )
     }
