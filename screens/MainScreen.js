@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Button, Dimensions } from 'react-native';
+import { View, Text, FlatList, Button, Dimensions, StyleSheet } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class MainScreen extends Component {
+  
   static navigationOptions = {
     headerTitle: 'Food-Finder',
     headerRight: (
@@ -82,6 +83,8 @@ class MainScreen extends Component {
               renderItem={({ item }) =>
                 <ListItem
                   title={item.email}
+                  roundAvatar
+                  avatar={{uri:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Default_profile_picture_%28male%29_on_Facebook.jpg/600px-Default_profile_picture_%28male%29_on_Facebook.jpg'}}
                   subtitle=' '
                   onPress={() => console.log('friendPressed')}
                   hideChevron
