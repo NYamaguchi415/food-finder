@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Dimensions, Button, StyleSheet } from 'react-native';
+import { View, Image, TouchableHighlight, Dimensions, Button, StyleSheet } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 
 //const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -13,11 +13,11 @@ class FilterScreen extends Component {
     return (
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', paddingTop: 50 }}>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Button
-            title='American'
-            onPress={() => console.log('abc')}
-            style={styles.filterButtonStyle}
-          />
+          <TouchableHighlight onPress={() => console.log('ok')}>
+            <Image
+              source={{ uri: 'https://cdn.foodbeast.com/wp-content/uploads/2017/06/Webp.net-compress-image.jpg' }}
+            />
+          </TouchableHighlight>
           <Button
             title='Chinese'
             onPress={() => console.log('abc')}
