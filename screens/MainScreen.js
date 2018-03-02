@@ -35,33 +35,42 @@ class MainScreen extends Component {
     });
   }
 
-  // const friendPressed() = {
-  //   console.log('friend was pressed');
-  // }
-
   userIdMapper() {
-    let userIds = {};
+    const userIds = {};
     console.log(this.state.users);
-    this.state.users.forEach((userId)=>{
+    this.state.users.forEach((userId) => {
       userIds[userId.key] = 0;
-    })
+    });
     return userIds;
   }
-  
+
   proceed() {
     console.log('proceed');
-    let newEvent = {
+    const users = this.userIdMapper();
+    const userKeys = Object.keys(users);
+
+    const newEvent = {
       createdTime: new Date(),
       match: 0,
-      users: this.userIdMapper()
-    }
-    let eventId = firebase.database().ref('events').push();
-    eventId.set(newEvent, function(val) {
+      users
+    };
+
+    const eventId = firebase.database().ref('events').push();
+    eventId.set(newEvent, (val) => {
       console.log('oncomplete');
       console.log(val);
-    })
+    });
 
+    userKeys.forEach((userId) => {
+      firebase.database().ref('users')
+      .child(userId)
+      .child('currentEvent_id')
+      .set(eventId.key);
+    });
+
+    // this.props.navigation.navigate('filterScreen');
     this.props.navigation.navigate('swipe');
+
   }
 
   render() {
