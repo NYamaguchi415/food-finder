@@ -39,6 +39,29 @@ class MainScreen extends Component {
   //   console.log('friend was pressed');
   // }
 
+  userIdMapper() {
+    let userIds = {};
+    console.log(this.state.users);
+    this.state.users.forEach((userId)=>{
+      userIds[userId.key] = 0;
+    })
+    return userIds;
+  }
+  
+  proceed() {
+    console.log('proceed');
+    let newEvent = {
+      createdTime: new Date(),
+      match: 0,
+      users: this.userIdMapper()
+    }
+    let eventId = firebase.database().ref('events').push();
+    eventId.set(newEvent, function(val) {
+      console.log('oncomplete');
+      console.log(val);
+    })
+  }
+
   render() {
     return (
       <View style={{ paddingTop: SCREEN_HEIGHT * 0.05 }}>
@@ -60,7 +83,7 @@ class MainScreen extends Component {
         </View>
         <Button
           title='Proceed'
-          onPress={() => console.log('proceed')}
+          onPress={this.proceed.bind(this)}
         />
       </View>
     );
