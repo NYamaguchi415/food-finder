@@ -68,8 +68,8 @@ class MainScreen extends Component {
       .set(eventId.key);
     });
 
-    // this.props.navigation.navigate('filterScreen');
-    this.props.navigation.navigate('swipe');
+    this.props.navigation.navigate('filterScreen');
+    // this.props.navigation.navigate('swipe');
 
   }
 

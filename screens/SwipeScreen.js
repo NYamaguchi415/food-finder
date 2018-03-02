@@ -19,10 +19,10 @@ class SwipeScreen extends Component {
         console.log(this.props.user);
         let restaurants = {};
         let index = 0;
-        const eventId = 'event_id'
+        // const eventId = 'event_id'
         let suggestedRestaurants = {}
         this.state = {
-            eventId: eventId,
+            eventId: '',
             event: null,
             restaurantList: [],
             time: 180,
@@ -41,35 +41,45 @@ class SwipeScreen extends Component {
             }
         }
 
-        firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
+        firebase.database().ref('users').child(this.props.user.uid).once('value')
+            .then((snapshot)=>{
+                firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
 
-        firebase.database().ref('events').once('value')
-        .then((snapshot)=>{
-            firebase.database().ref('restaurants').once('value')
-            .then((snap)=>{
-                suggestedRestaurants = snap.val();
+                const eventId = snapshot.val().currentEvent_id;
+                console.log(snapshot.val());
+                this.setState({eventId});
 
-                let event = snapshot.child(this.state.eventId).val();
-                const users = event.users ?  Object.keys(event.users).length: -1;
-
-                const restaurants = event.restaurants;
-                const restaurantList = []
-                let keys = Object.keys(restaurants);
-                keys.forEach((key)=>{
-                    console.log('suggested of key', key, suggestedRestaurants[key]);
-                    restaurantList.push(
-                        {key: key, restaurant: suggestedRestaurants[key]})
+                firebase.database().ref('events').once('value')
+                .then((snapshot)=>{
+                    firebase.database().ref('restaurants').once('value')
+                    .then((snap)=>{
+                        suggestedRestaurants = snap.val();
+        
+                        let event = snapshot.child(eventId).val();
+                        const users = event.users ?  Object.keys(event.users).length: -1;
+        
+                        const restaurants = event.restaurants;
+                        const restaurantList = []
+                        let keys = Object.keys(restaurants);
+                        keys.forEach((key)=>{
+                            console.log('suggested of key', key, suggestedRestaurants[key]);
+                            restaurantList.push(
+                                {key: key, restaurant: suggestedRestaurants[key]})
+                        })
+                        this.setState({
+                            event,
+                            restaurantList,
+                            restaurants,
+                            activeRestaurant: restaurantList[0].key,
+                            users
+                        })
+            
+                    })    
                 })
-                this.setState({
-                    event,
-                    restaurantList,
-                    restaurants,
-                    activeRestaurant: restaurantList[0].key,
-                    users
-                })
-    
-            })    
-        })
+        
+            });
+
+
 
         updateTime = ()=> {
             const time = this.state.time -1;
