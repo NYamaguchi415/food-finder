@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "lasflajsfl;ajsdfljas",
+  apiKey: "xxxxxxxxxxxxxxxxxx",
   authDomain: "food-finder-c4fc4.firebaseapp.com",
   databaseURL: "https://food-finder-c4fc4.firebaseio.com",
   projectId: "food-finder-c4fc4",

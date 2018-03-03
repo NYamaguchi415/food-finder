@@ -10,6 +10,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import AuthScreen from './screens/AuthScreen';
 import MainScreen from './screens/MainScreen';
 import SwipeScreen from './screens/SwipeScreen';
+import ResultsScreen from './screens/ResultsScreen';
 import FilterScreen from './screens/FilterScreen';
 import YelpTestScreen from './screens/YelpTestScreen';
 import reducers from './src/reducers';
@@ -22,6 +23,7 @@ export default class App extends Component {
       welcome: { screen: WelcomeScreen },
       auth: { screen: AuthScreen },
       swipe: { screen: SwipeScreen },
+      results: { screen: ResultsScreen },
       main: {
         screen: TabNavigator({
           mainScreen: { screen: MainScreen },
