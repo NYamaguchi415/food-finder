@@ -40,44 +40,54 @@ class SwipeScreen extends Component {
             }
         }
 
-        firebase.database().ref('users').child(this.props.user.uid).once('value')
-            .then((userSnapshot)=>{
+        let eventId;
+        let userSnapshot;
+        let eventSnapshot;
+        function getUser() {
+            return firebase.database().ref('users').child(this.props.user.uid).once('value');
+        }
 
-                const eventId = userSnapshot.val().currentEvent_id;
-                this.setState({eventId});
-                firebase.database().ref(`events/${this.state.eventId}/match`).on('value',callback);
+        function getEvents(snapshot) {
+            userSnapshot = snapshot;
+            return firebase.database().ref('events').once('value')
+        }
 
-                firebase.database().ref('events').once('value')
-                .then((snapshot)=>{
-                    firebase.database().ref('restaurants').once('value')
-                    .then((snap)=>{
-                        suggestedRestaurants = snap.val();
-        
-                        let event = snapshot.child(eventId).val();
-                        const users = event.users ?  Object.keys(event.users).length: -1;
-        
-                        const restaurants = event.restaurants;
-                        const restaurantList = []
-                        let keys = Object.keys(restaurants);
-                        keys.forEach((key)=>{
-                            console.log('suggested of key', key, suggestedRestaurants[key]);
-                            restaurantList.push(
-                                {key: key, restaurant: suggestedRestaurants[key]})
-                        })
-                        this.setState({
-                            event,
-                            restaurantList,
-                            restaurants,
-                            activeRestaurant: restaurantList[0].key,
-                            users
-                        })
-            
-                    })    
-                })
-        
-            });
+        function getUserEvent(snapshot) {
+            eventId = userSnapshot.val().currentEvent_id;
+            firebase.database().ref(`events/${eventId}/match`).on('value',callback);
+            eventSnapshot = snapshot;
+            let event = eventSnapshot.child(eventId).val();
+            return firebase.database().ref('restaurants').once('value')
+        }
 
+        function doWork(snapshot) {
+            suggestedRestaurants = snapshot.val();
+            let event = eventSnapshot.child(eventId).val();
+            const users = event.users ?  Object.keys(event.users).length: -1;
 
+            const restaurants = event.restaurants;
+            const restaurantList = []
+            let keys = Object.keys(restaurants);
+            keys.forEach((key)=>{
+                console.log('suggested of key', key, suggestedRestaurants[key]);
+                restaurantList.push(
+                    {key: key, restaurant: suggestedRestaurants[key]})
+            })
+            this.setState({
+                event,
+                eventId,
+                restaurantList,
+                restaurants,
+                activeRestaurant: restaurantList[0].key,
+                users
+            })
+
+        }  
+
+        getUser.call(this)
+        .then(getEvents.bind(this))
+        .then(getUserEvent.bind(this))
+        .then(doWork.bind(this))
 
         updateTime = ()=> {
             const time = this.state.time -1;
@@ -108,11 +118,6 @@ class SwipeScreen extends Component {
     }
     
     confirmAction() {
-        console.log('confirm button pressed');
-        console.log(this.state.activeRestaurant);
-        // firebase.database().ref(`restaurants/${this.state.activeRestaurant}/votes`)
-        console.log('active', this.state.activeRestaurant);
-        console.log(typeof this.state.activeRestaurant)
         let state;
         if (typeof this.state.activeRestaurant === 'string') {
             state = this.state.activeRestaurant;
