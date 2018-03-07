@@ -21,7 +21,10 @@ class MainScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { users: [] };
+    this.state = { 
+      users: [],
+      lunchGroup: []
+    };
   }
 
   componentWillMount() {
@@ -71,9 +74,9 @@ class MainScreen extends Component {
       console.log(val);
     });
 
-    userKeys.forEach((userId) => {
+    this.state.lunchGroup.forEach((userId) => {
       firebase.database().ref('users')
-      .child(userId)
+      .child(userId.key)
       .child('currentEvent_id')
       .set(eventId.key);
     });
@@ -81,6 +84,13 @@ class MainScreen extends Component {
     this.props.navigation.navigate('filterScreen');
     // this.props.navigation.navigate('swipe');
 
+  }
+
+  addUser(user) {
+    console.log(user);
+    let lunchGroup = this.state.lunchGroup;
+    lunchGroup.push(user);
+    this.setState({lunchGroup})
   }
 
   render() {
@@ -97,7 +107,7 @@ class MainScreen extends Component {
                   roundAvatar
                   avatar={{uri:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Default_profile_picture_%28male%29_on_Facebook.jpg/600px-Default_profile_picture_%28male%29_on_Facebook.jpg'}}
                   subtitle=' '
-                  onPress={() => console.log('friendPressed')}
+                  onPress={()=>{this.addUser(item)}}
                   hideChevron
                 />
               }
