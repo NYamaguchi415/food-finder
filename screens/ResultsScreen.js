@@ -17,11 +17,11 @@ class ResultsScreen extends Component {
         this.state = {
             restaurants: {}
         }
-        let eventId = "event_id";
+        let eventId;
 
         firebase.database().ref('users').child(this.props.user.uid).once('value')
         .then((userSnapshot)=>{
-            const eventId = userSnapshot.val().currentEvent_id;
+            eventId = userSnapshot.val().currentEvent_id;
             // this.setState({eventId});
             firebase.database().ref(`events/${eventId}/restaurants`).once('value')
             .then((snapshot)=>{
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth }) => {
-    return {user: user.auth}
+    return {user: auth.user}
 };
 
 export default connect(mapStateToProps, {

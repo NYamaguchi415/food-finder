@@ -81,12 +81,19 @@ class MainScreen extends Component {
     // Sets the created event id on every user involved as a currentEvent_id
     userKeys.forEach((userId) => {
       firebase.database().ref('users')
-      .child(userId)
+      .child(userId.key)
       .child('currentEvent_id')
       .set(eventId.key);
     });
 
     this.props.navigation.navigate('filterScreen');
+  }
+
+  addUser(user) {
+    console.log(user);
+    let lunchGroup = this.state.lunchGroup;
+    lunchGroup.push(user);
+    this.setState({lunchGroup})
   }
 
   render() {
