@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Button, Dimensions, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
+import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
-import { connect } from 'react-redux';
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -21,41 +22,46 @@ class MainScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { users: [] };
+    this.state = { friends: [] };
   }
 
   componentWillMount() {
     //const self = this;
     const url = 'users';
-    firebase.database().ref('users').child(this.props.user.uid).once('value')
-    .then((userSnapshot)=>{
-        const eventId = userSnapshot.val().currentEvent_id;
-        console.log(eventId);
-        if (eventId) {
-              this.props.navigation.navigate('swipe');
-        }});
-        
+    // firebase.database().ref('users').child(this.props.user.uid).once('value')
+    // .then((userSnapshot) => {
+    //     const eventId = userSnapshot.val().currentEvent_id;
+    //     console.log(eventId);
+    //     if (eventId) {
+    //           this.props.navigation.navigate('swipe');
+    //     }
+    //   });
+
     firebase.database().ref(url).once('value', (snapshot) => {
       const result = snapshot.val();
-      const users = [];
+      const friends = [];
       Object.keys(result).forEach((key) => {
-        users.push({ key, email: result[key].email });
+        friends.push({ key, email: result[key].email, selected: false });
       });
-      this.setState({ users });
+      this.setState({ friends });
     });
   }
 
-  userIdMapper() {
-    const userIds = {};
-    console.log(this.state.users);
-    this.state.users.forEach((userId) => {
-      userIds[userId.key] = 0;
-    });
-    return userIds;
+  // userIdMapper() {
+  //   const userIds = {};
+  //   this.state.users.forEach((userId) => {
+  //     userIds[userId.key] = 0;
+  //   });
+  //   return userIds;
+  // }
+
+  friendSelected(index) {
+    const data = this.state.friends;
+    data[index].selected = !data[index].selected;
+    this.setState({ friends: data });
   }
 
   proceed() {
-    console.log('proceed');
     const users = this.userIdMapper();
     const userKeys = Object.keys(users);
 
@@ -65,12 +71,14 @@ class MainScreen extends Component {
       users
     };
 
+    // Creates a new event in db when user proceeds to filter screen
     const eventId = firebase.database().ref('events').push();
     eventId.set(newEvent, (val) => {
       console.log('oncomplete');
       console.log(val);
     });
 
+    // Sets the created event id on every user involved as a currentEvent_id
     userKeys.forEach((userId) => {
       firebase.database().ref('users')
       .child(userId)
@@ -79,8 +87,6 @@ class MainScreen extends Component {
     });
 
     this.props.navigation.navigate('filterScreen');
-    // this.props.navigation.navigate('swipe');
-
   }
 
   render() {
@@ -89,19 +95,20 @@ class MainScreen extends Component {
         <Text>FRIENDS</Text>
         <View style={{ height: SCREEN_HEIGHT * 0.8 }}>
           <List>
-            <FlatList
-              data={this.state.users}
-              renderItem={({ item }) =>
+            {
+              this.state.friends.map((item, i) => (
                 <ListItem
                   title={item.email}
+                  key={i}
                   roundAvatar
-                  avatar={{uri:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Default_profile_picture_%28male%29_on_Facebook.jpg/600px-Default_profile_picture_%28male%29_on_Facebook.jpg'}}
-                  subtitle=' '
-                  onPress={() => console.log('friendPressed')}
-                  hideChevron
+                  onPress={this.friendSelected.bind(this, i)}
+                  rightIcon={{ name: 'check',
+                    type: 'font-awesome',
+                    style: { marginRight: 10, fontSize: 15 }
+                  }}
                 />
-              }
-            />
+              ))
+            }
           </List>
         </View>
         <Button
@@ -112,10 +119,10 @@ class MainScreen extends Component {
     );
   }
 }
-function mapStateToProps({ auth }) {
-  return { user: auth.user };
-}
+// function mapStateToProps({ auth }) {
+//   return { user: auth.user };
+// }
 
-export default connect(mapStateToProps)(MainScreen);
+export default (MainScreen);
 
 // export default MainScreen;
