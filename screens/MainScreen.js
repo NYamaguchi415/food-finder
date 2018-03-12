@@ -4,6 +4,7 @@ import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
 
+const _ = require('lodash/core');
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -46,28 +47,13 @@ class MainScreen extends Component {
     });
   }
 
-  // userIdMapper() {
-  //   const userIds = {};
-  //   this.state.users.forEach((userId) => {
-  //     userIds[userId.key] = 0;
-  //   });
-  //   return userIds;
-  // }
-
-
-  testListItem = ({ item, i }) => {
-    return (
-      <ListItem
-        title={item.email}
-        key={i}
-        roundAvatar
-        onPress={this.friendSelected.bind(this, i)}
-        rightIcon={{ name: 'check',
-          type: 'font-awesome',
-          style: { marginRight: 10, fontSize: 15 }
-        }}
-      />
-    );
+  userIdMapper() {
+    const userIds = {};
+    const selectedFriends = _.filter(this.state.friends, { selected: true });
+    selectedFriends.forEach((userId) => {
+      userIds[userId.key] = 0;
+    });
+    return userIds;
   }
 
   friendSelected(index) {
@@ -78,7 +64,6 @@ class MainScreen extends Component {
 
   proceed() {
     const users = this.userIdMapper();
-    const userKeys = Object.keys(users);
     const newEvent = {
       createdTime: new Date(),
       match: 0,
@@ -86,27 +71,17 @@ class MainScreen extends Component {
     };
     // Creates a new event in db when user proceeds to filter screen
     const eventId = firebase.database().ref('events').push();
-    eventId.set(newEvent, (val) => {
-      console.log('oncomplete');
-      console.log(val);
-    });
+    eventId.set(newEvent);
     // Sets the created event id on every user involved as a currentEvent_id
-    userKeys.forEach((userId) => {
+    Object.keys(users).forEach((userId) => {
       firebase.database().ref('users')
-      .child(userId.key)
+      .child(userId)
       .child('currentEvent_id')
       .set(eventId.key);
     });
 
     this.props.navigation.navigate('filterScreen');
   }
-
-  // addUser(user) {
-  //   console.log(user);
-  //   let lunchGroup = this.state.lunchGroup;
-  //   lunchGroup.push(user);
-  //   this.setState({lunchGroup})
-  // }
 
   render() {
     return (
