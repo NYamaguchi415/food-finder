@@ -31,6 +31,12 @@ class ResultsScreen extends Component {
             })    
         })    
     }
+
+    //TODO: Remove user's currentEventId
+    componentWillUnmount() {
+
+    }
+  
     render() {
         return(
             <View style={styles.mainViewStyle}>
