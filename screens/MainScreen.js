@@ -8,7 +8,6 @@ import firebase from '../firebaseInit';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class MainScreen extends Component {
-
   static navigationOptions = {
     headerTitle: 'Food-Finder',
     headerRight: (
@@ -55,6 +54,22 @@ class MainScreen extends Component {
   //   return userIds;
   // }
 
+
+  testListItem = ({ item, i }) => {
+    return (
+      <ListItem
+        title={item.email}
+        key={i}
+        roundAvatar
+        onPress={this.friendSelected.bind(this, i)}
+        rightIcon={{ name: 'check',
+          type: 'font-awesome',
+          style: { marginRight: 10, fontSize: 15 }
+        }}
+      />
+    );
+  }
+
   friendSelected(index) {
     const data = this.state.friends;
     data[index].selected = !data[index].selected;
@@ -64,20 +79,17 @@ class MainScreen extends Component {
   proceed() {
     const users = this.userIdMapper();
     const userKeys = Object.keys(users);
-
     const newEvent = {
       createdTime: new Date(),
       match: 0,
       users
     };
-
     // Creates a new event in db when user proceeds to filter screen
     const eventId = firebase.database().ref('events').push();
     eventId.set(newEvent, (val) => {
       console.log('oncomplete');
       console.log(val);
     });
-
     // Sets the created event id on every user involved as a currentEvent_id
     userKeys.forEach((userId) => {
       firebase.database().ref('users')
@@ -89,12 +101,12 @@ class MainScreen extends Component {
     this.props.navigation.navigate('filterScreen');
   }
 
-  addUser(user) {
-    console.log(user);
-    let lunchGroup = this.state.lunchGroup;
-    lunchGroup.push(user);
-    this.setState({lunchGroup})
-  }
+  // addUser(user) {
+  //   console.log(user);
+  //   let lunchGroup = this.state.lunchGroup;
+  //   lunchGroup.push(user);
+  //   this.setState({lunchGroup})
+  // }
 
   render() {
     return (
@@ -111,7 +123,10 @@ class MainScreen extends Component {
                   onPress={this.friendSelected.bind(this, i)}
                   rightIcon={{ name: 'check',
                     type: 'font-awesome',
-                    style: { marginRight: 10, fontSize: 15 }
+                    style: { marginRight: 10,
+                      fontSize: 15,
+                      color: (item.selected) ? 'green' : 'white'
+                    }
                   }}
                 />
               ))
@@ -131,5 +146,3 @@ class MainScreen extends Component {
 // }
 
 export default (MainScreen);
-
-// export default MainScreen;
