@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, TouchableHighlight, Dimensions, Button, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableHighlight, Image,   Text, Dimensions, Button, StyleSheet, ListView } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
 import {yelpAPIKey} from '../config';
@@ -28,8 +28,21 @@ class FilterScreen extends Component {
 
   constructor(props) {
     super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    // let data = 
+    // [{key: 'American'}, {key: 'Chinese'}, { key: 'Halal'},
+    // {key: 'Indian'}, {key: 'Italian'}, {key: 'Japanese'},
+    // {key: 'Mexican'}, {key: 'Thai'}, {key: 'Ukranian'}];
+
+    let books = [
+      {name: 'American', selected: false, img: 'https://irp-cdn.multiscreensite.com/04eabe1e/dms3rep/multi/desktop/good-indian-food-beaverton-1000x641.jpg'},
+    {name: 'Chinese', selected: false, img: 'https://irp-cdn.multiscreensite.com/04eabe1e/dms3rep/multi/desktop/good-indian-food-beaverton-1000x641.jpg'},
+    {name: 'Halal', selected: false, img: 'https://irp-cdn.multiscreensite.com/04eabe1e/dms3rep/multi/desktop/good-indian-food-beaverton-1000x641.jpg'}]
+    
     this.state = {
       restaurants: [],
+      books: books,
+      dataSource: ds.cloneWithRows(books)
     }
   }
 
@@ -72,23 +85,38 @@ class FilterScreen extends Component {
       .then(this.proceed.bind(this));      
   }
 
+  _onPressRow(rowData) {
+    console.log('pressed');
+    console.log(rowData);
+    let data = this.state.books;
+    
+    let i = data.find(book => book.name === rowData.name);
+    i.selected = true;
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});    
+    this.setState({
+      books: data,
+      dataSource: ds.cloneWithRows(data)      
+    });
+  }
+
   render() {
     return (
       <View>
-        <View>
-          <List>
-            <FlatList
-              data={[{ key: 'American' }, { key: 'Chinese' }, { key: 'Halal' },
-               { key: 'Indian' }, { key: 'Italian' }, { key: 'Japanese' },
-               { key: 'Mexican' }, { key: 'Thai' }, { key: 'Ukranian' }]}
-              renderItem={({ item }) =>
-                <ListItem
-                  title={item.key}
-                  hideChevron
-                />
+        <View style={{paddingTop: 100, justifyContent: 'center', alignItems: 'center'}}>
+          <ListView
+              contentContainerStyle={styles.list}
+              dataSource={this.state.dataSource}
+              renderRow={(rowData) => 
+                <TouchableHighlight onPress={this._onPressRow.bind(this, rowData)}>
+                  <View style={{paddingHorizontal: 10}}>
+                    <Image style={{height:100, width: 100, opacity: rowData.selected ? 0.3 : 1}} source={{uri:rowData.img}} >                                            
+                    </Image>
+                    <Text className={'highlight'} style={styles.item}>{rowData.name}</Text>                      
+                    { rowData.selected ? <Text style={styles.item}> Selected</Text> : null }
+                  </View>
+                  </TouchableHighlight>
               }
-            />
-          </List>
+                />
         </View>
         <Button
           title='Start Swiping'
@@ -102,6 +130,20 @@ class FilterScreen extends Component {
 export default FilterScreen;
 
 const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    backgroundColor: 'red',
+    opacity: 0.3
+  },
+  list: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+},
+item: {
+    // backgroundColor: '#CCC',
+    margin: 10,
+},
   filterButtonStyle: {
     flex: 1,
     height: 50,
