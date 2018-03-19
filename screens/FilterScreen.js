@@ -2,46 +2,74 @@ import React, { Component } from 'react';
 import { View, FlatList, TouchableHighlight, Dimensions, Button, StyleSheet } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
-
+import {yelpAPIKey} from '../config';
+import axios from 'axios';
 //const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+import FilterList from './components/filters/FilterList';
+
 class FilterScreen extends Component {
+
+  buildUrlFromCategories(categories) {
+    let url = 'https://api.yelp.com/v3/businesses/search?term=restaurants&location=NewYork';
+    url += '&categories=';
+    categories.forEach((c)=> {
+      url += c + ',';
+    })
+    return url;
+  }
+
+  getRestaurants() {
+    const categories = ['italian', 'mexican', 'thai'];
+    const url = this.buildUrlFromCategories(categories);
+    const options = {headers: {authorization: `Bearer ${yelpAPIKey}`}};
+    return axios.get(url, options);
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      restaurants: [],
+    }
+  }
+
   static navigationOptions = {
     title: 'Filters',
   };
 
 
-  proceed() {
-    this.props.navigation.navigate('swipe');
-    const uId = firebase.auth().currentUser.uid;
+  proceed(response) {
+    let businesses = response.data && response.data.businesses;    
+    const uId = firebase.auth().currentUser.uid;    
     firebase.database().ref('users').child(uId).once('value', snapshot => {
       const eventId = snapshot.val().currentEvent_id;
-      firebase.database().ref('events').child(eventId).update(
-        { restaurants: {
-          restaurant_id_1: {
-            name: 'Essen',
-            no: 0,
-            yes: 0
-          },
-          restaurant_id_2: {
-            name: 'SweetGreen',
-            no: 0,
-            yes: 0
-          },
-          restaurant_id_3: {
-            name: 'Chipotle',
-            no: 0,
-            yes: 0
+
+      // let restaurants = 
+      let restaurants = {};
+
+      // problem with this is that by using the name as keys we get weird errors, maybe just strip out special characters for now
+      businesses.forEach((r)=>{
+        // const key = r.name.replace(/[\.\#\$\[\]\/]/g, "");
+        const key = r.id;
+        restaurants[key] = {
+            name: r.name, no: 0, yes: 0, id: r.id
           }
-        }, }
+        });
+      firebase.database().ref('events').child(eventId).update(
+        {restaurants: restaurants}
       );
+
+      businesses.forEach((r)=>{
+        firebase.database().ref('restaurants').push(r);
+      })
+      this.props.navigation.navigate('swipe');
+      
     });
-    //const eventId = firebase.database().ref();
-    // const eventId = firebase.database().ref('events').push();
-    // eventId.set(newEvent, (val) => {
-    //   console.log('oncomplete');
-    //   console.log(val);
-    // });
+  }
+
+  getRestaurantsAndProceed() {
+    this.getRestaurants.call(this)
+      .then(this.proceed.bind(this));      
   }
 
   render() {
@@ -64,7 +92,7 @@ class FilterScreen extends Component {
         </View>
         <Button
           title='Start Swiping'
-          onPress={this.proceed.bind(this)}
+          onPress={this.getRestaurantsAndProceed.bind(this)}
         />
       </View>
     );

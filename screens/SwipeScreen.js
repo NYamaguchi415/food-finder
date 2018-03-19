@@ -14,6 +14,28 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class SwipeScreen extends Component {
+
+    buildUrlFromId(id) {
+        let url = `https://api.yelp.com/v3/businesses/${id}`;
+        return url;
+    }
+
+    getRestaurantFromYelp() {
+        const url = this.buildUrlFromId(this.props.keyName);
+        const options = {headers: {authorization: `Bearer ${yelpAPIKey}`}};
+        axios.get(url, options).then((response)=>{
+          let business = response.data;
+          console.log('active place', business);
+          this.setState({
+            restaurant: {
+                picture: business.image_url,
+                name: business.name,
+                votes: 0
+            }
+          });
+        })    
+    }
+
     constructor(props) {
         super(props);
         let restaurants = {};
@@ -44,7 +66,8 @@ class SwipeScreen extends Component {
         let userSnapshot;
         let eventSnapshot;
         function getUser() {
-            return firebase.database().ref('users').child(this.props.user.uid).once('value');
+            const uId = this.props.user.uid;
+            return firebase.database().ref('users').child(uId).once('value');
         }
 
         function getEvents(snapshot) {
@@ -57,19 +80,13 @@ class SwipeScreen extends Component {
             firebase.database().ref(`events/${eventId}/match`).on('value',callback);
             eventSnapshot = snapshot;
             let event = eventSnapshot.child(eventId).val();
-            return firebase.database().ref('restaurants').once('value')
-        }
-
-        function doWork(snapshot) {
-            suggestedRestaurants = snapshot.val();
-            let event = eventSnapshot.child(eventId).val();
+            let suggestedRestaurants = event.restaurants;
             const users = event.users ?  Object.keys(event.users).length: -1;
-
             const restaurants = event.restaurants;
             const restaurantList = []
             let keys = Object.keys(restaurants);
             keys.forEach((key)=>{
-                console.log('suggested of key', key, suggestedRestaurants[key]);
+                // console.log('suggested of key', key, suggestedRestaurants[key]);
                 restaurantList.push(
                     {key: key, restaurant: suggestedRestaurants[key]})
             })
@@ -87,7 +104,6 @@ class SwipeScreen extends Component {
         getUser.call(this)
         .then(getEvents.bind(this))
         .then(getUserEvent.bind(this))
-        .then(doWork.bind(this))
 
         updateTime = ()=> {
             const time = this.state.time -1;
@@ -153,7 +169,7 @@ class SwipeScreen extends Component {
                     return;
                 } 
 
-                console.log(this.state.restaurantList[0].key);
+                // console.log(this.state.restaurantList[0].key);
                 const activeRestaurant = 
                 
                     this.state.restaurantList[0].key;
@@ -279,12 +295,14 @@ class SwipeScreen extends Component {
     }
 
     renderSwipeCards() {
+        // console.log(this.state.restaurantList);
         return (<SwipeCards
                 cards={this.state.restaurantList}
                 renderCard={(cardData) => <ActivePlace 
                     styles={styles}
                     time={this.state.time}
                     restaurant={cardData.restaurant} 
+                    keyName={cardData.key} 
                     renderConfirmButton={this.renderConfirmButton.bind(this)}
                     renderCancelButton={this.renderCancelButton.bind(this)}
                     />}
