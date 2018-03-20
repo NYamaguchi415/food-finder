@@ -60,28 +60,7 @@ export default class ActivePlace extends Component {
             this.getRestaurantFromYelp(nextProps.keyName);
         }
     }
-    renderButton(good) {
-        return (
-        <TouchableOpacity
-            style={{
-                padding: 10,
-                height: 100, 
-                width: 100
-            }}        
-        >
-            <Image
-                style={{
-                    padding: 10,
-                    height: 100, 
-                    width: 100
-                }}
-                source={
-                  {uri: good ? 'https://i2.wp.com/anefforttoevolve.com/wp-content/uploads/2014/11/s_s-classic-heart-green-art-print_1024x1024.jpg?ssl=1'
-                  : 'http://img.playbuzz.com/image/upload/f_auto,fl_lossy,q_auto/cdn/4a135657-26e2-4777-84c9-5326eb5458cd/6abc1710-fe29-4eef-8031-0c0aec1e0774.jpg'}
-              }/>
-    </TouchableOpacity>)
-
-    }
+    
     render() {        
         const {timeRowStyle, imageRowStyle, detailHeaderRowStyle, detailSubHeaderRowStyle, buttonRowStyle} = styles;
         return(
@@ -137,8 +116,8 @@ export default class ActivePlace extends Component {
                     </Text>
                 </View>
                 <View style={buttonRowStyle}>
-                        {this.renderButton(false)}
-                        {this.renderButton(true)}
+                    {this.props.renderCancelButton()}
+                    {this.props.renderConfirmButton()}
                 </View>            
             </View>
                 
