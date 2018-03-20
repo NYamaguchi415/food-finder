@@ -6,8 +6,6 @@ import {yelpAPIKey} from '../config';
 import axios from 'axios';
 //const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-import FilterList from './components/filters/FilterList';
-
 class FilterScreen extends Component {
 
   buildUrlFromCategories(categories) {
