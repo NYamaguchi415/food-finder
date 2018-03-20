@@ -50,9 +50,12 @@ class FilterScreen extends Component {
         <View>
           <List>
             <FlatList
-              data={[{ key: 'American' }, { key: 'Chinese' }, { key: 'Halal' },
+              data={[{ key: 'American' }, { key: 'Chinese' }, { key: 'Dessert' },
+               { key: 'Greek' }, { key: 'Halal' }, { key: 'Hamburgers' },
                { key: 'Indian' }, { key: 'Italian' }, { key: 'Japanese' },
-               { key: 'Mexican' }, { key: 'Thai' }, { key: 'Ukranian' }]}
+               { key: 'Mexican' }, { key: 'Sandwiches' }, { key: 'Thai' },
+               { key: 'Ukranian' }, { key: 'Vegetarian', }
+            ]}
               renderItem={({ item }) =>
                 <ListItem
                   title={item.key}

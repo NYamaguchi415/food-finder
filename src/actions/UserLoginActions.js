@@ -32,11 +32,21 @@ export const loginUser = ({ email, password }) => {
 		firebase.auth().signInWithEmailAndPassword(email, password)
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
-				firebase.auth().createUserWithEmailAndPassword(email, password)
-					.then(user => createUserSuccess(dispatch, user, email))
-					.catch(() => loginUserFail(dispatch));
+				// firebase.auth().createUserWithEmailAndPassword(email, password)
+				// 	.then(user => createUserSuccess(dispatch, user, email))
+					// .catch(() => loginUserFail(dispatch));
+				loginUserFail(dispatch);
 				console.log(error);
 			});
+	};
+};
+
+export const signupUser = ({ email, password }) => {
+	return (dispatch) => {
+		dispatch({ type: LOGIN_USER });
+		firebase.auth().createUserWithEmailAndPassword(email, password)
+			.then(user => createUserSuccess(dispatch, user, email))
+			.catch((error) => console.log(error));
 	};
 };
 

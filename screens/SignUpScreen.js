@@ -6,7 +6,15 @@ import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLog
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class AuthScreen extends Component {
+class SignUpScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      confirmationPass: ''
+    };
+  }
+
   componentWillReceiveProps(newProps) {
     this.onAuthComplete(newProps);
   }
@@ -25,30 +33,24 @@ class AuthScreen extends Component {
     this.props.passwordChanged(text);
   }
 
-  loginButtonPressed() {
-    const { email, password } = this.props;
-    this.props.loginUser({ email, password });
-    Keyboard.dismiss();
-  }
-
-  renderButton() {
-    if (this.props.loading) {
-      return <ActivityIndicator size='large' />;
+  checkPasswords() {
+    if (this.props.password === this.state.confirmationPass) {
+      console.log('password works');
+    } else {
+      console.log('password mismatch');
     }
-    return (
-      <Button
-        title='Log In'
-        style={styles.loginButtonStyle}
-        onPress={this.loginButtonPressed.bind(this)}
-        // onPress={() => this.props.navigation.navigate('mainScreen')}
-      />
-    );
   }
 
   render() {
     return (
         <View style={styles.mainViewStyle}>
           <View style={{ height: 160, width: SCREEN_WIDTH * 0.85 }}>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder='Username'
+              autoCorrect={false}
+              autoCapitalize='none'
+            />
             <TextInput
               style={styles.textInputStyle}
               placeholder='email@gmail.com'
@@ -59,26 +61,25 @@ class AuthScreen extends Component {
             />
             <TextInput
               style={styles.textInputStyle}
-              placeholder='password'
+              placeholder='Password'
               autoCorrect={false}
               secureTextEntry
               autoCapitalize='none'
               onChangeText={this.onPasswordChange.bind(this)}
               value={this.props.password}
             />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.errorTextStyle}>
-                {this.props.error}
-              </Text>
-              {this.renderButton()}
-            </View>
-            <View>
-              <Button
-                title='Sign Up'
-                style={styles.signInButtonStyle}
-                onPress={() => this.props.navigation.navigate('signup')}
-              />
-            </View>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder='Confirm Password'
+              autoCorrect={false}
+              secureTextEntry
+              autoCapitalize='none'
+              onChangeText={(text) => this.setState({ confirmationPass: text })}
+            />
+            <Button
+              title='Create Account'
+              onPress={this.checkPasswords.bind(this)}
+            />
           </View>
         </View>
     );
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1
   },
-  loginButtonStyle: {
+  signInButtonStyle: {
     flex: 1,
     alignSelf: 'center'
   },
@@ -119,4 +120,4 @@ const mapStateToProps = ({ auth }) => {
 
 export default connect(mapStateToProps, {
   emailChanged, passwordChanged, loginUser
-})(AuthScreen);
+})(SignUpScreen);
