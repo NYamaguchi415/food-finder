@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Button, Dimensions,
   Keyboard, View, Text, TextInput } from 'react-native';
-import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLoginActions';
+import { emailChanged,
+  passwordChanged,
+  usernameChanged,
+  loginUser,
+  signupUser } from '../src/actions/UserLoginActions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -33,11 +37,21 @@ class SignUpScreen extends Component {
     this.props.passwordChanged(text);
   }
 
+  onUsernameChange(text) {
+    this.props.usernameChanged(text);
+  }
+
   checkPasswords() {
     if (this.props.password === this.state.confirmationPass) {
-      console.log('password works');
-    } else {
-      console.log('password mismatch');
+      return true;
+    }
+  }
+
+  signupButtonPressed() {
+    const { email, password, username } = this.props;
+    const pwCheck = this.checkPasswords();
+    if (pwCheck) {
+      this.props.signupUser({ email, password, username });
     }
   }
 
@@ -50,6 +64,8 @@ class SignUpScreen extends Component {
               placeholder='Username'
               autoCorrect={false}
               autoCapitalize='none'
+              onChangeText={this.onUsernameChange.bind(this)}
+              value={this.props.username}
             />
             <TextInput
               style={styles.textInputStyle}
@@ -78,7 +94,7 @@ class SignUpScreen extends Component {
             />
             <Button
               title='Create Account'
-              onPress={this.checkPasswords.bind(this)}
+              onPress={this.signupButtonPressed.bind(this)}
             />
           </View>
         </View>
@@ -114,10 +130,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading, user } = auth;
-  return { email, password, error, loading, user };
+  const { email, password, username, error, loading, user } = auth;
+  return { email, password, username, error, loading, user };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
+  emailChanged, passwordChanged, usernameChanged, loginUser, signupUser
 })(SignUpScreen);

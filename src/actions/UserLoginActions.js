@@ -1,9 +1,9 @@
-// import firebase from 'firebase';
 import firebase from '../../firebaseInit';
 
 import {
 	EMAIL_CHANGED,
 	PASSWORD_CHANGED,
+	USERNAME_CHANGED,
 	LOGIN_USER_SUCCESS,
 	LOGIN_USER_FAIL,
 	LOGIN_USER
@@ -23,43 +23,64 @@ export const passwordChanged = (text) => {
 	};
 };
 
+export const usernameChanged = (text) => {
+	return {
+		type: USERNAME_CHANGED,
+		payload: text
+	};
+};
+
 export const loginUser = ({ email, password }) => {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_USER });
-		// Try logging in user. If error is thrown, try creating new
-		// account for email this needs to be changed in the future
-		// into a real account create vs login feature
+		// Try logging in user
 		firebase.auth().signInWithEmailAndPassword(email, password)
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
-				// firebase.auth().createUserWithEmailAndPassword(email, password)
-				// 	.then(user => createUserSuccess(dispatch, user, email))
-					// .catch(() => loginUserFail(dispatch));
 				loginUserFail(dispatch);
 				console.log(error);
 			});
 	};
 };
 
-export const signupUser = ({ email, password }) => {
+export const signupUser = ({ email, password, username }) => {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_USER });
-		firebase.auth().createUserWithEmailAndPassword(email, password)
-			.then(user => createUserSuccess(dispatch, user, email))
-			.catch((error) => console.log(error));
+		if (usernameCheck(username)) {
+			firebase.auth().createUserWithEmailAndPassword(email, password)
+				.then(user => createUserSuccess(dispatch, user, email, username))
+				.catch(() => loginUserFail(dispatch));
+		} else {
+			console.log('username taken');
+		}
 	};
 };
 
-const writeUserData = (user, email) => {
+const usernameCheck = (username) => {
+	let usernameGood = false;
+	firebase.database().ref('users')
+	.orderByChild('username').equalTo(username)
+	.on('value', snapshot => {
+		if (snapshot.exists()) {
+			usernameGood = false;
+		} else {
+			usernameGood = true;
+		}
+	});
+	return (usernameGood);
+};
+
+const writeUserData = (user, email, username) => {
 	const uid = user.uid;
 	firebase.database().ref(`users/${uid}`).set({
-		email
+		email,
+		username
 	});
 };
 
-const createUserSuccess = (dispatch, user, email) => {
+const createUserSuccess = (dispatch, user, email, username) => {
 	loginUserSuccess(dispatch, user);
-	writeUserData(user, email);
+	writeUserData(user, email, username);
 };
 
 const loginUserSuccess = (dispatch, user) => {
