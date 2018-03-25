@@ -63,22 +63,23 @@ export default class ActivePlace extends Component {
 
     render() {        
         const {timeRowStyle, imageRowStyle, detailHeaderRowStyle, 
-            detailSubHeaderRowStyle, buttonRowStyle, restaurantTouchImageStyle, restaurantImageStyle
+            detailSubHeaderRowStyle, buttonRowStyle, restaurantTouchImageStyle, restaurantImageStyle,
+            nameStyle, otherStyle, nameText
         } = styles;
         return(
             <View>
                 <View style={timeRowStyle}>
-                    <Text style={styles.timeText}>
-                        {parseInt(this.props.time / 60)} 
-                    </Text>
-                    <Text>min</Text>
-                    <Text style={styles.timeText}>
-                        {parseInt(this.props.time) % 60}
-                    </Text>
-                    <Text>sec</Text>
+                        <Text style={styles.timeText}>
+                            {parseInt(this.props.time / 60)} 
+                        </Text>
+                        <Text>min</Text>
+                        <Text style={styles.timeText}>
+                            {parseInt(this.props.time) % 60}
+                        </Text>
+                        <Text>sec</Text>
                 </View>                
                 <View style={imageRowStyle}>
-                    <TouchableOpacity style={restaurantImageStyle}>
+                    <TouchableOpacity style={restaurantTouchImageStyle}>
                     {
                         this.state.picture ?
                         <Image style={restaurantImageStyle} 
@@ -87,15 +88,19 @@ export default class ActivePlace extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={detailHeaderRowStyle}>
-                    <Text style={styles.timeText}>
-                        {this.state.name}
-                    </Text>
-                    <Text style={styles.detailText}>
-                        {this.state.rating} / 5
-                    </Text>
-                    <Text style={styles.detailText}>
-                        0.3 m
-                    </Text>
+                    <View style={nameStyle}>
+                        <Text style={styles.nameText}>
+                            {this.state.name}
+                        </Text>
+                        </View>
+                    <View style={otherStyle}>
+                        <Text style={styles.detailText}>
+                            {this.state.rating} / 5
+                        </Text>
+                        <Text style={styles.detailText}>
+                            0.3 m
+                        </Text>
+                    </View>
                 </View>
                 <View style={detailSubHeaderRowStyle}>
                     <Text style={styles.priceText}>
@@ -119,43 +124,64 @@ export default class ActivePlace extends Component {
 const styles = {
     timeRowStyle: {
         height: 50,
+        flex: 1,
+        paddingTop: 50,
+        paddingBottom: 50,
+        // justifyContent: 'space-around',
         justifyContent: 'center',
         alignItems: 'center',                                
         flexDirection: 'row'
     },
     restaurantTouchImageStyle: {
-        height: 300, 
+        height: SCREEN_WIDTH * 0.9, 
         flex: 1,                        
         width: null,
+        marginRight: SCREEN_WIDTH * 0.05,
+        marginLeft: SCREEN_WIDTH * 0.05
     },
     restaurantImageStyle: {        
-        height: 300, 
+        height: SCREEN_WIDTH * 0.9, 
         flex: 1,                        
         width: null,
-        padding: 20,
-        marginRight: 20,
-        marginLeft: 20,
-        borderRadius: 50            
+        borderRadius: 25,
+        // marginRight: SCREEN_WIDTH * 0.05,
+        // marginLeft: SCREEN_WIDTH * 0.05
     },
     imageRowStyle: {
         borderBottomWidth: 1,
-        padding: 5,
+        // padding: 5,
+        paddingBottom: 20,
         backgroundColor: '#fff',
         justifyContent: 'flex-start',
         flexDirection: 'row',
         borderColor: '#ddd',
         position: 'relative'                
     },    
+    nameStyle:{
+        maxHeight: 100,    
+        flex: 3
+        // flexShrink: 2
+    }, 
+    otherStyle: {
+        flex: 1,flexDirection:'row'
+    },
     detailHeaderRowStyle: {
+        maxHeight: 100,
         height: 50,
+        paddingTop: 50,
+        paddingBottom: 50,
         paddingLeft: 20,
         paddingRight: 20,
+        flexWrap: 'wrap',
+        margin: 0,
         justifyContent: 'space-between',
         alignItems: 'center',                                
         flexDirection: 'row'
     },
     detailSubHeaderRowStyle: {
+        // flex: 1,
         height: 50,
+        paddingTop: 10,
         paddingLeft: 20,
         paddingRight: 20,
         justifyContent: 'flex-start',
@@ -163,12 +189,16 @@ const styles = {
         flexDirection: 'row'
     },
     buttonRowStyle: {
+        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',                                
         flexDirection: 'row'
     },
     errorStyles: {
         fontSize: 18
+    },
+    nameText: {
+        fontSize: 30        
     },
     timeText: {
         fontSize: 40
