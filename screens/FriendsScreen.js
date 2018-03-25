@@ -4,11 +4,9 @@ import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
 
-const _ = require('lodash/core');
-
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-class MainScreen extends Component {
+class FriendsScreen extends Component {
   static navigationOptions = {
     headerTitle: 'Food-Finder',
     headerRight: (
@@ -129,4 +127,4 @@ function mapStateToProps({ auth }) {
   return { user: auth.user };
 }
 
-export default connect(mapStateToProps)(MainScreen);
+export default connect(mapStateToProps)(FriendsScreen);

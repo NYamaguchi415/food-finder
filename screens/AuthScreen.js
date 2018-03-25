@@ -13,7 +13,7 @@ class AuthScreen extends Component {
 
   onAuthComplete(props) {
     if (props.user) {
-      this.props.navigation.navigate('mainScreen');
+      this.props.navigation.navigate('friendsScreen');
     }
   }
 
@@ -29,6 +29,10 @@ class AuthScreen extends Component {
     const { email, password } = this.props;
     this.props.loginUser({ email, password });
     Keyboard.dismiss();
+  }
+
+  signupButtonPressed() {
+    this.props.navigation.navigate('signup');
   }
 
   renderButton() {
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#009688'
+    backgroundColor: '#FF875E'
   },
   textInputStyle: {
     flex: 1,

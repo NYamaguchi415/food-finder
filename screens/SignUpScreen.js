@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Button, Dimensions,
-  Keyboard, View, Text, TextInput } from 'react-native';
+  Keyboard, View, TextInput } from 'react-native';
 import { emailChanged,
   passwordChanged,
   usernameChanged,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#009688'
+    backgroundColor: '#FF875E'
   },
   textInputStyle: {
     flex: 1,

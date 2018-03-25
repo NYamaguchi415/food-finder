@@ -37,7 +37,7 @@ export const loginUser = ({ email, password }) => {
 		firebase.auth().signInWithEmailAndPassword(email, password)
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
-				loginUserFail(dispatch);
+				loginUserFail(dispatch, 'Authentication Failed');
 				console.log(error);
 			});
 	};
@@ -45,33 +45,32 @@ export const loginUser = ({ email, password }) => {
 
 export const signupUser = ({ email, password, username }) => {
 	return (dispatch) => {
-		dispatch({ type: LOGIN_USER });	
-		usernameCheck(username).then((isAvailable)=>{
+		dispatch({ type: LOGIN_USER });
+		usernameCheck(username).then((isAvailable) => {
 			if (isAvailable) {
 				firebase.auth().createUserWithEmailAndPassword(email, password)
 				.then(user => createUserSuccess(dispatch, user, email, username))
-				.catch(() => loginUserFail(dispatch));				
+				.catch(() => loginUserFail(dispatch, 'Error'));
 			} else {
-				console.log('taken');
+				loginUserFail(dispatch, 'Username Taken');
 			}
-		})
+		});
 	};
 };
 
 const usernameCheck = (username) => {
-	return new Promise((resolve, reject)=>{
-		let usernameGood = false;
+	return new Promise((resolve, reject) => {
 		firebase.database().ref('users')
 		.orderByChild('username').equalTo(username)
 		.on('value', snapshot => {
-			var val = snapshot.val();
+			const val = snapshot.val();
 			if (val) {
 				return resolve(false);
 			} else {
 				return resolve(true);
 			}
-		})	
-	})
+		});
+	});
 };
 
 const writeUserData = (user, email, username) => {
@@ -94,8 +93,9 @@ const loginUserSuccess = (dispatch, user) => {
 	});
 };
 
-const loginUserFail = (dispatch) => {
+const loginUserFail = (dispatch, error) => {
 	dispatch({
-		type: LOGIN_USER_FAIL
+		type: LOGIN_USER_FAIL,
+		payload: error
 	});
 };
