@@ -43,7 +43,7 @@ export default class ActivePlace extends Component {
     constructor(props) {
         super(props);
         this.state= {
-            picture: '',
+            picture: null,
             name: null,
             votes: 0
         }
@@ -60,9 +60,11 @@ export default class ActivePlace extends Component {
             this.getRestaurantFromYelp(nextProps.keyName);
         }
     }
-    
+
     render() {        
-        const {timeRowStyle, imageRowStyle, detailHeaderRowStyle, detailSubHeaderRowStyle, buttonRowStyle} = styles;
+        const {timeRowStyle, imageRowStyle, detailHeaderRowStyle, 
+            detailSubHeaderRowStyle, buttonRowStyle, restaurantTouchImageStyle, restaurantImageStyle
+        } = styles;
         return(
             <View>
                 <View style={timeRowStyle}>
@@ -76,24 +78,12 @@ export default class ActivePlace extends Component {
                     <Text>sec</Text>
                 </View>                
                 <View style={imageRowStyle}>
-                    <TouchableOpacity
-                    style={{
-                        height: 300, 
-                        flex: 1,                        
-                        width: null,
-                        // padding: 10
-                        }}
-                    >
-                        <Image style={{
-                            height: 300, 
-                            flex: 1,                        
-                            width: null,
-                            padding: 20,
-                            marginRight: 20,
-                            marginLeft: 20,
-                            borderRadius: 50
-                            }}
-                            source={{uri:this.state.picture}} />
+                    <TouchableOpacity style={restaurantImageStyle}>
+                    {
+                        this.state.picture ?
+                        <Image style={restaurantImageStyle} 
+                        source={{uri:this.state.picture}} /> : null                    
+                    }
                     </TouchableOpacity>
                 </View>
                 <View style={detailHeaderRowStyle}>
@@ -125,12 +115,27 @@ export default class ActivePlace extends Component {
     }
 }
 
+
 const styles = {
     timeRowStyle: {
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',                                
         flexDirection: 'row'
+    },
+    restaurantTouchImageStyle: {
+        height: 300, 
+        flex: 1,                        
+        width: null,
+    },
+    restaurantImageStyle: {        
+        height: 300, 
+        flex: 1,                        
+        width: null,
+        padding: 20,
+        marginRight: 20,
+        marginLeft: 20,
+        borderRadius: 50            
     },
     imageRowStyle: {
         borderBottomWidth: 1,
