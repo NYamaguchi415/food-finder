@@ -64,10 +64,13 @@ export default class ActivePlace extends Component {
     render() {        
         const {timeRowStyle, imageRowStyle, detailHeaderRowStyle, 
             detailSubHeaderRowStyle, buttonRowStyle, restaurantTouchImageStyle, restaurantImageStyle,
-            nameStyle, otherStyle, nameText
+            nameStyle, otherStyle, nameText, actualStyle
         } = styles;
         return(
-            <View>
+            <View style={
+                { flex: 1,
+                    width: SCREEN_WIDTH,}
+            }>
                 <View style={timeRowStyle}>
                         <Text style={styles.timeText}>
                             {parseInt(this.props.time / 60)} 
@@ -88,27 +91,25 @@ export default class ActivePlace extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={detailHeaderRowStyle}>
-                    <View style={nameStyle}>
                         <Text style={styles.nameText}>
                             {this.state.name}
                         </Text>
-                        </View>
-                    <View style={otherStyle}>
                         <Text style={styles.detailText}>
                             {this.state.rating} / 5
                         </Text>
                         <Text style={styles.detailText}>
                             0.3 m
                         </Text>
-                    </View>
                 </View>
                 <View style={detailSubHeaderRowStyle}>
+                    <View style={actualStyle}>
                     <Text style={styles.priceText}>
                         {this.state.price}
                     </Text>
                     <Text style={styles.detailText}>
                         {this.state.categories}
                     </Text>
+                    </View>
                 </View>
                 <View style={buttonRowStyle}>
                     {this.props.renderCancelButton()}
@@ -123,10 +124,11 @@ export default class ActivePlace extends Component {
 
 const styles = {
     timeRowStyle: {
-        height: 50,
-        flex: 1,
-        paddingTop: 50,
-        paddingBottom: 50,
+        // height: 50,
+
+        // flex: 1,
+        // paddingTop: 50,
+        paddingBottom: 25,
         // justifyContent: 'space-around',
         justifyContent: 'center',
         alignItems: 'center',                                
@@ -141,13 +143,14 @@ const styles = {
     },
     restaurantImageStyle: {        
         height: SCREEN_WIDTH * 0.9, 
-        flex: 1,                        
+        // flex: 1,                        
         width: null,
         borderRadius: 25,
         // marginRight: SCREEN_WIDTH * 0.05,
         // marginLeft: SCREEN_WIDTH * 0.05
     },
     imageRowStyle: {
+        // flex: 1,
         borderBottomWidth: 1,
         // padding: 5,
         paddingBottom: 20,
@@ -158,35 +161,41 @@ const styles = {
         position: 'relative'                
     },    
     nameStyle:{
-        maxHeight: 100,    
-        flex: 3
+        height: 50,
+        // width: SCREEN_WIDTH,
+        
+        // maxHeight: 100,    
+        // flex: 3
         // flexShrink: 2
     }, 
     otherStyle: {
-        flex: 1,flexDirection:'row'
+        // flex: 1,
+        flexDirection:'row'
     },
     detailHeaderRowStyle: {
-        maxHeight: 100,
-        height: 50,
-        paddingTop: 50,
-        paddingBottom: 50,
-        paddingLeft: 20,
-        paddingRight: 20,
-        flexWrap: 'wrap',
-        margin: 0,
-        justifyContent: 'space-between',
-        alignItems: 'center',                                
-        flexDirection: 'row'
+        // flex: 1,      
+        flexDirection:'row',
+        // justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: SCREEN_WIDTH * 0.05
+        
+    },
+    actualStyle: {
+        flexDirection:'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
     },
     detailSubHeaderRowStyle: {
+        padding: SCREEN_WIDTH * 0.05
         // flex: 1,
-        height: 50,
-        paddingTop: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        justifyContent: 'flex-start',
-        alignItems: 'center',                                
-        flexDirection: 'row'
+        // height: 50,
+        // paddingTop: 10,
+        // paddingLeft: 20,
+        // paddingRight: 20,
+        // justifyContent: 'flex-start',
+        // justifyContent: 'center',        
+        // alignItems: 'center',                                
+        // flexDirection: 'row'
     },
     buttonRowStyle: {
         // flex: 1,
