@@ -9,7 +9,7 @@ class WelcomeScreen extends Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('auth')}>
+      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('authStack')}>
         <View style={styles.mainViewStyle}>
           <Text style={styles.titleTextStyle}>
             Food Finder
