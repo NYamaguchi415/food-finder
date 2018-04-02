@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { SearchBar } from 'react-native-elements';
-import { userSearchChanged } from '../src/actions/FriendsActions';
+import { userSearchChanged, firebaseUserSearch } from '../src/actions/FriendsActions';
 
 
 class UserSearchScreen extends Component {
   static navigationOptions = {
     title: 'User Search',
   };
-  // constructor(props) {
-  //     super(props);
-  //     this.state = {
-  //         searchEntry: ''
-  //     };
-  // }
 
-  // searchBarChanged(text) {
-  //   this.setState(searchEntry) = text;
-  // }
+  searchBarChanged(text) {
+    this.props.userSearchChanged(text);
+    this.props.firebaseUserSearch(text);
+  }
+
+  buttonPressed() {
+    console.log(this.props.userSearchData);
+  }
 
   render() {
     return (
@@ -30,8 +29,14 @@ class UserSearchScreen extends Component {
           placeholder='Search'
           autoCorrect={false}
           autoCapitalize='none'
-          onChangeText={this.props.userSearchChanged}
+          onChangeText={
+            this.searchBarChanged.bind(this)
+          }
           value={this.props.userSearchEntry}
+        />
+        <Button
+          title='test check'
+          onPress={this.buttonPressed.bind(this)}
         />
       </View>
     );
@@ -41,10 +46,11 @@ class UserSearchScreen extends Component {
 //export default UserSearchScreen;
 
 const mapStateToProps = ({ friends }) => {
-  const { userSearchEntry } = friends;
-  return { userSearchEntry };
+  const { userSearchEntry, userSearchData } = friends;
+  return { userSearchEntry, userSearchData };
 };
 
 export default connect(mapStateToProps, {
-  userSearchChanged
+  userSearchChanged,
+  firebaseUserSearch
 })(UserSearchScreen);

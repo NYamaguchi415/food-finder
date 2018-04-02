@@ -33,7 +33,8 @@ class FriendsScreen extends Component {
         if (eventId) {
               this.props.navigation.navigate('swipe');
         }
-      });
+      }
+    );
     //
     firebase.database().ref(url).once('value', (snapshot) => {
       const result = snapshot.val();

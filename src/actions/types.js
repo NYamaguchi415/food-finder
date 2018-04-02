@@ -6,3 +6,4 @@ export const LOGIN_USER_FAIL = 'login_user_fail';
 export const LOGIN_USER = 'login_user';
 
 export const USER_SEARCH_CHANGED = 'user_search_changed';
+export const FIREBASE_USER_SEARCH = 'firebase_user_search';
