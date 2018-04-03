@@ -18,14 +18,16 @@ export const firebaseUserSearch = (text) => {
     .orderByChild('username')
     .startAt(text)
     .endAt(`${text}zzzz`)
-    .limitToLast(2)
     .on('value',
       (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
+        const userList = [];
+        Object.keys(data).forEach((key) => {
+          userList.push({ key, username: data[key].username });
+        });
         dispatch({
           type: FIREBASE_USER_SEARCH,
-          payload: data
+          payload: userList
         });
       }
     );

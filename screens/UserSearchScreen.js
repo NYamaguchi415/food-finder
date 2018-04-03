@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar, List, ListItem } from 'react-native-elements';
 import { userSearchChanged, firebaseUserSearch } from '../src/actions/FriendsActions';
 
 
@@ -16,7 +16,10 @@ class UserSearchScreen extends Component {
   }
 
   buttonPressed() {
-    console.log(this.props.userSearchData);
+    const data = this.props.userSearchData;
+    data.map((key, df) => (
+      console.log(df)
+    ));
   }
 
   render() {
@@ -34,6 +37,17 @@ class UserSearchScreen extends Component {
           }
           value={this.props.userSearchEntry}
         />
+        <List>
+          {
+            this.props.userSearchData.map((data) => (
+              <ListItem
+                title={data.username}
+                key={data.key}
+                roundAvatar
+              />
+            ))
+          }
+        </List>
         <Button
           title='test check'
           onPress={this.buttonPressed.bind(this)}

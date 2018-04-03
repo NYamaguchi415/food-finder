@@ -35,7 +35,7 @@ class FriendsScreen extends Component {
         }
       }
     );
-    //
+
     firebase.database().ref(url).once('value', (snapshot) => {
       const result = snapshot.val();
       const friends = [];
@@ -45,7 +45,6 @@ class FriendsScreen extends Component {
         } else {
           friends.push({ key, email: result[key].email, selected: false });
         }
-        // friends.push({ key, email: result[key].email, selected: false });
       });
       this.setState({ friends });
     });
@@ -53,7 +52,6 @@ class FriendsScreen extends Component {
 
   userIdMapper() {
     const userIds = {};
-    // const selectedFriends = _.filter(this.state.friends, { selected: true });
     const selectedFriends = this.state.friends.filter(friend => friend.selected === true);
     selectedFriends.forEach((userId) => {
       userIds[userId.key] = 0;

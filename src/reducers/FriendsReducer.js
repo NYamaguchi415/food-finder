@@ -6,7 +6,7 @@ import {
 
 const INITIAL_STATE = {
   userSearchEntry: '',
-  userSearchData: {}
+  userSearchData: []
 };
 
 export default (state = INITIAL_STATE, action) => {
