@@ -1,12 +1,14 @@
 import {
   USER_SEARCH_CHANGED,
-  FIREBASE_USER_SEARCH
+  FIREBASE_USER_SEARCH,
+  UPDATE_FRIENDSLIST
 } from '../actions/types';
 
 
 const INITIAL_STATE = {
   userSearchEntry: '',
-  userSearchData: []
+  userSearchData: [],
+  friendsList: 'a'
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -15,6 +17,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, userSearchEntry: action.payload };
     case FIREBASE_USER_SEARCH:
       return { ...state, userSearchData: action.payload };
+    case UPDATE_FRIENDSLIST:
+      return { ...state, friendsList: action.payload };
     default:
       return state;
   }

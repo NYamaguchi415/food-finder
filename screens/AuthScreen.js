@@ -13,7 +13,8 @@ class AuthScreen extends Component {
 
   onAuthComplete(props) {
     if (props.user) {
-      this.props.navigation.navigate('friendsScreen');
+      this.props.navigation.navigate('friendsStack');
+      Keyboard.dismiss();
     }
   }
 

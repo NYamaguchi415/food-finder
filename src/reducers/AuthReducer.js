@@ -7,8 +7,8 @@ import {
 	LOGIN_USER } from '../actions/types';
 
 const INITIAL_STATE = {
-	email: '',
-	password: '',
+	email: 'naoki@havenlife.com',
+	password: 'Password123',
 	username: '',
 	user: null,
 	error: '',
@@ -24,7 +24,7 @@ export default (state = INITIAL_STATE, action) => {
 		case USERNAME_CHANGED:
 			return { ...state, username: action.payload, error: '' };
 		case LOGIN_USER_SUCCESS:
-			return { ...state, ...INITIAL_STATE, user: action.payload };
+			return { ...state, ...INITIAL_STATE, user: action.payload, };
 		case LOGIN_USER_FAIL:
 			return { ...state, error: action.payload, password: '', loading: false };
 		case LOGIN_USER:

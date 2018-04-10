@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 class WelcomeScreen extends Component {
   componentWillMount() {
-    this.props.navigation.navigate('userSearchScreen');
+    // this.props.navigation.navigate('userSearchScreen');
   }
 
   render() {
@@ -25,6 +25,7 @@ function mapStateToProps({ auth }) {
 }
 
 export default connect(mapStateToProps)(WelcomeScreen);
+
 
 const styles = StyleSheet.create({
   mainViewStyle: {

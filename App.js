@@ -22,29 +22,34 @@ export default class App extends Component {
   render() {
     const MainNavigator =
     TabNavigator({
-      welcome: { screen: WelcomeScreen },
-      authStack: {
-        screen: StackNavigator({
-            auth: { screen: AuthScreen },
-            signup: { screen: SignUpScreen }
-        })
-      },
-      swipe: { screen: SwipeScreen },
-      results: { screen: ResultsScreen },
-      main: {
-        screen: TabNavigator({
-          friendsScreen: { screen: FriendsScreen },
-          userSearchScreen: { screen: UserSearchScreen },
-          filterScreen: { screen: FilterScreen },
-          yelpScreen: { screen: YelpTestScreen }
-        })
-      }
-    }, {
-      navigationOptions: {
-        tabBarVisible: false
-      },
-      lazy: true
-    });
+        welcome: { screen: WelcomeScreen },
+        authStack: {
+          screen: StackNavigator({
+              auth: { screen: AuthScreen },
+              signup: { screen: SignUpScreen }
+          })
+        },
+        swipe: { screen: SwipeScreen },
+        results: { screen: ResultsScreen },
+        main: {
+          screen: TabNavigator({
+            friendsStack: {
+              screen: StackNavigator({
+                friendsScreen: { screen: FriendsScreen },
+                userSearchScreen: { screen: UserSearchScreen }
+              })
+            },
+            filterScreen: { screen: FilterScreen },
+            yelpScreen: { screen: YelpTestScreen }
+          })
+        }
+      }, {
+        navigationOptions: {
+          tabBarVisible: false
+        },
+        lazy: true
+    })
+    ;
     return (
       <Provider store={store}>
         <View style={styles.container}>

@@ -16,10 +16,11 @@ class UserSearchScreen extends Component {
   }
 
   buttonPressed() {
-    const data = this.props.userSearchData;
-    data.map((key, df) => (
-      console.log(df)
-    ));
+    console.log(this.props.user.uid);
+  }
+
+  friendsListItemPressed() {
+    console.log(this.props.user);
   }
 
   render() {
@@ -44,6 +45,15 @@ class UserSearchScreen extends Component {
                 title={data.username}
                 key={data.key}
                 roundAvatar
+                onPress={() => this.friendsListItemPressed.bind(this, data.key)}
+                rightIcon={{ name: 'check',
+                  type: 'font-awesome',
+                  style: {
+                    marginRight: 10,
+                    fontSize: 15
+                    // color: (data.selected) ? 'green' : 'white'
+                  }
+                }}
               />
             ))
           }
@@ -59,9 +69,10 @@ class UserSearchScreen extends Component {
 
 //export default UserSearchScreen;
 
-const mapStateToProps = ({ friends }) => {
+const mapStateToProps = ({ friends, auth }) => {
   const { userSearchEntry, userSearchData } = friends;
-  return { userSearchEntry, userSearchData };
+  const { user } = auth;
+  return { userSearchEntry, userSearchData, user };
 };
 
 export default connect(mapStateToProps, {
