@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { SearchBar, List, ListItem } from 'react-native-elements';
-import { userSearchChanged, firebaseUserSearch } from '../src/actions/FriendsActions';
+import {
+  userSearchChanged,
+  firebaseUserSearch,
+  retrieveFriendsList
+ } from '../src/actions/FriendsActions';
 
 
 class UserSearchScreen extends Component {
@@ -16,7 +20,8 @@ class UserSearchScreen extends Component {
   }
 
   buttonPressed() {
-    console.log(this.props.user.uid);
+    retrieveFriendsList(this.props.user.uid);
+    console.log(this.props.friendsList);
   }
 
   friendsListItemPressed() {
@@ -67,15 +72,14 @@ class UserSearchScreen extends Component {
   }
 }
 
-//export default UserSearchScreen;
-
 const mapStateToProps = ({ friends, auth }) => {
-  const { userSearchEntry, userSearchData } = friends;
+  const { userSearchEntry, userSearchData, friendsList } = friends;
   const { user } = auth;
-  return { userSearchEntry, userSearchData, user };
+  return { userSearchEntry, userSearchData, user, friendsList };
 };
 
 export default connect(mapStateToProps, {
   userSearchChanged,
-  firebaseUserSearch
+  firebaseUserSearch,
+  retrieveFriendsList
 })(UserSearchScreen);

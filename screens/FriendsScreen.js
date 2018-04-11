@@ -70,7 +70,7 @@ class FriendsScreen extends Component {
   }
 
   proceed() {
-    retrieveFriendsList(this.props.user.uid);
+    this.props.retrieveFriendsList(this.props.user.uid);
     console.log(this.props.friendsList);
     // const users = this.userIdMapper();
     // const newEvent = {
