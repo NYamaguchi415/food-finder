@@ -19,11 +19,6 @@ class FriendsScreen extends Component {
     )
   })
 
-  constructor(props) {
-    super(props);
-    this.state = { friends: [] };
-  }
-
   componentDidMount() {
     // Check whether user has a current Event to send them to an Event if they have
     firebase.database().ref('users').child(this.props.user.uid).once('value')
@@ -36,22 +31,6 @@ class FriendsScreen extends Component {
     );
 
     this.props.retrieveFriendsList(this.props.user.uid);
-
-    firebase.database().ref('users')
-    .child(this.props.user.uid)
-    .child('friends')
-    .on('value', (snapshot) => {
-      const result = snapshot.val();
-      const friends = [];
-      Object.keys(result).forEach((key) => {
-        if (key === this.props.user.uid) {
-          friends.push({ key, email: result[key].email, selected: true });
-        } else {
-          friends.push({ key, email: result[key].email, selected: false });
-        }
-      });
-      this.setState({ friends });
-    });
   }
 
   userIdMapper() {
@@ -100,9 +79,9 @@ class FriendsScreen extends Component {
         <View style={{ height: SCREEN_HEIGHT * 0.8 }}>
           <List>
             {
-              Object.keys(this.props.friendsList).map((key) => (
+              (Object.keys(this.props.friendsList)).map((key) => (
                 <ListItem
-                  title={this.props.friendsList[key].userName}
+                  title={this.props.friendsList[key].username}
                   key={key}
                   roundAvatar
                   onPress={this.friendSelected.bind(key)}
