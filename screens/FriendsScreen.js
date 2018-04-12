@@ -24,7 +24,7 @@ class FriendsScreen extends Component {
     this.state = { friends: [] };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // Check whether user has a current Event to send them to an Event if they have
     firebase.database().ref('users').child(this.props.user.uid).once('value')
     .then((userSnapshot) => {
@@ -35,7 +35,7 @@ class FriendsScreen extends Component {
       }
     );
 
-    retrieveFriendsList(this.props.user.uid);
+    this.props.retrieveFriendsList(this.props.user.uid);
 
     firebase.database().ref('users')
     .child(this.props.user.uid)
@@ -63,15 +63,17 @@ class FriendsScreen extends Component {
     return userIds;
   }
 
-  friendSelected(index) {
-    const data = this.state.friends;
-    data[index].selected = !data[index].selected;
-    this.setState({ friends: data });
+  friendSelected(friendUserId) {
+    console.log(friendUserId);
+    // const data = this.state.friends;
+    // data[index].selected = !data[index].selected;
+    // this.setState({ friends: data });
   }
 
   proceed() {
     this.props.retrieveFriendsList(this.props.user.uid);
     console.log(this.props.friendsList);
+
     // const users = this.userIdMapper();
     // const newEvent = {
     //   createdTime: new Date(),
@@ -98,19 +100,18 @@ class FriendsScreen extends Component {
         <View style={{ height: SCREEN_HEIGHT * 0.8 }}>
           <List>
             {
-              this.state.friends.filter(
-                user => user.key !== this.props.user.uid
-              ).map((item, i) => (
+              Object.keys(this.props.friendsList).map((key) => (
                 <ListItem
-                  title={item.email}
-                  key={i}
+                  title={this.props.friendsList[key].userName}
+                  key={key}
                   roundAvatar
-                  onPress={this.friendSelected.bind(this, i)}
+                  onPress={this.friendSelected.bind(key)}
                   rightIcon={{ name: 'check',
                     type: 'font-awesome',
-                    style: { marginRight: 10,
+                    style: {
+                      marginRight: 10,
                       fontSize: 15,
-                      color: (item.selected) ? 'green' : 'white'
+                      color: (this.props.friendsList[key].selected) ? 'green' : 'white'
                     }
                   }}
                 />

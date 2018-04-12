@@ -7,7 +7,7 @@ import {
   firebaseUserSearch,
   retrieveFriendsList
  } from '../src/actions/FriendsActions';
-
+import firebase from '../firebaseInit';
 
 class UserSearchScreen extends Component {
   static navigationOptions = {
@@ -19,13 +19,22 @@ class UserSearchScreen extends Component {
     this.props.firebaseUserSearch(text);
   }
 
+  friendAdd = (friendUserId) => {
+    firebase.database().ref(`users/${this.props.user.uid}/friends`)
+    .child(friendUserId)
+    .set({
+      accepted: true
+    });
+  };
+
   buttonPressed() {
     retrieveFriendsList(this.props.user.uid);
     console.log(this.props.friendsList);
   }
 
   friendsListItemPressed() {
-    console.log(this.props.user);
+    console.log('hello');
+    // console.log(friendUserId);
   }
 
   render() {
@@ -50,7 +59,7 @@ class UserSearchScreen extends Component {
                 title={data.username}
                 key={data.key}
                 roundAvatar
-                onPress={() => this.friendsListItemPressed.bind(this, data.key)}
+                onPress={() => this.friendsListItemPressed}
                 rightIcon={{ name: 'check',
                   type: 'font-awesome',
                   style: {

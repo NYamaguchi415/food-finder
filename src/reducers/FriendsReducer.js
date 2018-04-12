@@ -8,7 +8,7 @@ import {
 const INITIAL_STATE = {
   userSearchEntry: '',
   userSearchData: [],
-  friendsList: 'a'
+  friendsList: {}
 };
 
 export default (state = INITIAL_STATE, action) => {

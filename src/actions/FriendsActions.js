@@ -37,30 +37,61 @@ export const firebaseUserSearch = (text) => {
   };
 };
 
-// export const friendAddDelete = (key) => {
-//   return dispatch => {
-//     firebase.database().ref('users').child('z61EzxVAi4dpUbNB9kvkAmI3o2n1')
-//     .child('friends')
-//     .child(key)
-//     .update()
-//   };
+// export const friendAdd = (uid, friendUserId) => {
+//   firebase.database().ref(`users/${uid}/friends`)
+//   .child(friendUserId)
+// 	.set({
+// 		accepted: true
+// 	});
 // };
 
-export const retrieveFriendsList = (uid) => {
-  console.log(uid);
+// export const friendSelected = (friendUserId) => {
+// 	return {
+// 		type: FRIEND_SELECTED,
+// 		payload:
+// 	}
+// };
+
+export const retrieveFriendsList = (currentUserId) => {
   return dispatch => {
-    firebase.database().ref('users')
-    .child(uid)
-    .child('friends')
+    firebase.database().ref(`users/${currentUserId}/friends`)
     .on('value',
       (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
+        const data = snapshot.val() || {};
+        const userIds = Object.keys(data);
+				const promises = userIds.map(
+					userId => firebase.database().ref(`users/${userId}`).once('value')
+				);
+
+				Promise.all(promises).then(results => {
+					results.forEach(result => {
+						data[result.key].userName = result.val().username;
+						data[result.key].selected = false;
+					});
+				});
+
         dispatch({
           type: UPDATE_FRIENDSLIST,
-          payload: 'friendsList'
+          payload: data
         });
       }
     );
   };
 };
+
+// return (dispatch) => {
+// 	firebase.database().ref(`/feed/${currentUser.uid}`).on('value', snapshots => {
+// 		const values = snapshots.val() || {};
+// 		const entryIds = Object.keys(values);
+// 		const promises = entryIds.map(
+// 			eventId => firebase.database().ref(`/events/${eventId}`).once('value')
+// 		);
+//
+// 		Promise.all(promises).then(results => {
+// 			results.forEach(result => {
+// 				values[result.key] = result.val();
+// 			});
+// 			dispatch({ type: EVENTS_FETCH_SUCCESS, payload: values });
+// 		});
+// 	});
+// };
