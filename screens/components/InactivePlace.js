@@ -13,7 +13,7 @@ export default class InactivePlace extends Component {
     render() {
         let outOfMatchesMessage;
         let outOfTimeMessage;
-        if (this.props.outOfMathes) {
+        if (this.props.outOfMatches) {
             outOfMatchesMessage =  (
                 <Text style={this.props.styles.errorTextStyle}>
                     Out of matches

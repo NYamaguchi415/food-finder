@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 import {yelpAPIKey} from '../../config';
 import axios from 'axios';
-
+// import 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-export default class ActivePlace extends Component {    
+class ActivePlace extends Component {    
     buildUrlFromId(id) {
         let url = `https://api.yelp.com/v3/businesses/${id}`;
         return url;
@@ -36,8 +36,10 @@ export default class ActivePlace extends Component {
                     price: business.price,
                     categories: cats
                 });
-        })    
-
+        }).catch((e)=>{
+            console.log(e);
+            throw(e);
+        })
     }
 
     constructor(props) {
@@ -45,20 +47,32 @@ export default class ActivePlace extends Component {
         this.state= {
             picture: null,
             name: null,
-            votes: 0
+            votes: 0,
+            price: '',
+            distance: '',
+            time: -1,
+
         }
     }
     componentWillMount() {
-        this.getRestaurantFromYelp(this.props.keyName);
+        console.log(this.props);
+        this.getRestaurantFromYelp(this.props.id);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.keyName !== nextProps.keyName) {
-            console.log('SOMETHING CHANGED');
-            console.log(this.props.keyName, nextProps.keyName);
-            this.props.keyName = nextProps.keyName;
-            this.getRestaurantFromYelp(nextProps.keyName);
-        }
+        this.getRestaurantFromYelp(nextProps.id);
+        
+        // if (this.props.activeRestaurant.id !== nextProps.activeRestaurant.id) {
+        //     this.props.activeRestaurant = nextProps.activeRestaurant;
+        //     this.getRestaurantFromYelp(nextProps.activeRestaurant.id);
+        // }
+    }
+
+    renderConfirmButton() {
+        return <Button onPress={this.props.confirmButtonPressed.bind(this)} title={'good'} />
+    }
+    renderCancelButton() {
+        return <Button onPress={this.props.cancelButtonPressed.bind(this)} title={'bad'} />
     }
 
     render() {        
@@ -112,8 +126,8 @@ export default class ActivePlace extends Component {
                     </View>
                 </View>
                 <View style={buttonRowStyle}>
-                    {this.props.renderCancelButton()}
-                    {this.props.renderConfirmButton()}
+                    {this.renderCancelButton()}
+                    {this.renderConfirmButton()}
                 </View>            
             </View>
                 
@@ -121,6 +135,13 @@ export default class ActivePlace extends Component {
     }
 }
 
+// const mapStateToProps = ({swipe}) => {
+//     const {activeRestaurant} = swipe;
+//     return { activeRestaurant };
+// }
+
+// export default connect(mapStateToProps)(ActivePlace)
+export default ActivePlace;
 
 const styles = {
     timeRowStyle: {
