@@ -60,7 +60,7 @@ class TestSwipeScreen extends Component {
             this.props.activeRestaurant, 
             this.props.users)
     }
-    
+
     bad() {
         this.props.restaurantSwipeNo(
             this.props.index, 
@@ -127,7 +127,14 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({auth, swipe}) => {
-    const {restaurants, outOfMatches, matchOccured, eventId, activeRestaurant, index, users } = swipe;
+    const {
+        restaurants, 
+        activeRestaurant, 
+        index,
+        outOfMatches, 
+        matchOccured, 
+        eventId, 
+        users } = swipe;
     console.log(swipe);
     return { user: auth.user, outOfMatches, matchOccured, restaurants, eventId, index, activeRestaurant, users };
 };

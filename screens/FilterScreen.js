@@ -58,6 +58,7 @@ class FilterScreen extends Component {
       // let restaurants = 
       let restaurants = {};
 
+      let restaurantArray = []
       // problem with this is that by using the name as keys we get weird errors, maybe just strip out special characters for now
       businesses.forEach((r)=>{
         // const key = r.name.replace(/[\.\#\$\[\]\/]/g, "");
@@ -65,14 +66,20 @@ class FilterScreen extends Component {
         restaurants[key] = {
             name: r.name, no: 0, yes: 0, id: r.id
           }
+        restaurantArray.push(
+          {
+            name: r.name, no: 0, yes: 0, id: r.id
+          }          
+        )
+
         });
       firebase.database().ref('events').child(eventId).update(
-        {restaurants: restaurants}
+        {restaurants: restaurantArray}
       );
 
-      businesses.forEach((r)=>{
-        firebase.database().ref('restaurants').push(r);
-      })
+      // businesses.forEach((r)=>{
+      //   firebase.database().ref('restaurants').push(r);
+      // })
       this.props.navigation.navigate('swipe');
       
     });
