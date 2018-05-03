@@ -8,3 +8,4 @@ export const LOGIN_USER = 'login_user';
 export const USER_SEARCH_CHANGED = 'user_search_changed';
 export const FIREBASE_USER_SEARCH = 'firebase_user_search';
 export const UPDATE_FRIENDSLIST = 'update_friendslist';
+export const FRIEND_ADD = 'friend_add';

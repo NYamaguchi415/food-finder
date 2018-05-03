@@ -81,7 +81,7 @@ class FriendsScreen extends Component {
             {
               (Object.keys(this.props.friendsList)).map((key) => (
                 <ListItem
-                  title={this.props.friendsList[key].username}
+                  title={this.props.friendsList[key].userName}
                   key={key}
                   roundAvatar
                   onPress={this.friendSelected.bind(key)}

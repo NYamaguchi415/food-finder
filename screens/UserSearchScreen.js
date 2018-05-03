@@ -19,30 +19,43 @@ class UserSearchScreen extends Component {
     this.props.firebaseUserSearch(text);
   }
 
-  friendAdd = (friendUserId) => {
-    firebase.database().ref(`users/${this.props.user.uid}/friends`)
-    .child(friendUserId)
-    .set({
-      accepted: true
-    });
+  friendSelected = (friendUserId) => {
+    const ref = firebase.database().ref(`users/${this.props.user.uid}/friends`);
+    // .child(friendUserId);
+    ref.once('value',
+      (snapshot) => {
+          snapshot.hasChild(friendUserId);
+      }
+    );
+    // console.log(ref);
+    // .set({
+    //   accepted: true
+    // });
   };
 
+  // friendAdd = (friendUserId) => {
+  //   firebase.database().ref(`users/${this.props.user.uid}/friends`)
+  //   .child(friendUserId)
+  //   .set({
+  //     accepted: true
+  //   });
+  // };
+  //
+  // friendRemove = (friendUserId) => {
+  //
+  // }
+
   buttonPressed() {
-    retrieveFriendsList(this.props.user.uid);
-    console.log(this.props.friendsList);
+    console.log('hello');
   }
 
-  friendsListItemPressed() {
-    console.log('hello');
-    // console.log(friendUserId);
+  friendsListItemPressed(friendUserId) {
+    this.friendSelected(friendUserId);
   }
 
   render() {
     return (
       <View>
-        <Text>
-          HELLLLOOOOOO
-        </Text>
         <SearchBar
           placeholder='Search'
           autoCorrect={false}
@@ -59,13 +72,13 @@ class UserSearchScreen extends Component {
                 title={data.username}
                 key={data.key}
                 roundAvatar
-                onPress={() => this.friendsListItemPressed}
+                onPress={this.friendsListItemPressed.bind(this, data.key)}
                 rightIcon={{ name: 'check',
                   type: 'font-awesome',
                   style: {
                     marginRight: 10,
-                    fontSize: 15
-                    // color: (data.selected) ? 'green' : 'white'
+                    fontSize: 15,
+                    color: (data.selected) ? 'green' : 'white'
                   }
                 }}
               />

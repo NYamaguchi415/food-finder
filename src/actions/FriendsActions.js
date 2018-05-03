@@ -14,6 +14,7 @@ export const userSearchChanged = (text) => {
 };
 
 export const firebaseUserSearch = (text) => {
+	// function to search for users based on user input
   return dispatch => {
     firebase.database().ref('users')
     .orderByChild('username')
@@ -28,31 +29,19 @@ export const firebaseUserSearch = (text) => {
             userList.push({ key, username: data[key].username });
           });
         }
-        dispatch({
-          type: FIREBASE_USER_SEARCH,
-          payload: userList
-        });
+				dispatch({
+					type: FIREBASE_USER_SEARCH,
+					payload: userList
+				});
       }
     );
   };
 };
 
-// export const friendAdd = (uid, friendUserId) => {
-//   firebase.database().ref(`users/${uid}/friends`)
-//   .child(friendUserId)
-// 	.set({
-// 		accepted: true
-// 	});
-// };
-
-// export const friendSelected = (friendUserId) => {
-// 	return {
-// 		type: FRIEND_SELECTED,
-// 		payload:
-// 	}
-// };
-
 export const retrieveFriendsList = (currentUserId) => {
+	// function to retrieve data for friendsList
+
+	// retrieve logged in user's friends' uids
   return dispatch => {
     firebase.database().ref(`users/${currentUserId}/friends`)
     .on('value',
@@ -63,35 +52,18 @@ export const retrieveFriendsList = (currentUserId) => {
 					userId => firebase.database().ref(`users/${userId}`).once('value')
 				);
 
+				// retrieve friends' usernames by using uids
 				Promise.all(promises).then(results => {
 					results.forEach(result => {
 						data[result.key].userName = result.val().username;
 						data[result.key].selected = false;
 					});
+					dispatch({
+						type: UPDATE_FRIENDSLIST,
+						payload: data
+					});
 				});
-
-        dispatch({
-          type: UPDATE_FRIENDSLIST,
-          payload: data
-        });
       }
     );
   };
 };
-
-// return (dispatch) => {
-// 	firebase.database().ref(`/feed/${currentUser.uid}`).on('value', snapshots => {
-// 		const values = snapshots.val() || {};
-// 		const entryIds = Object.keys(values);
-// 		const promises = entryIds.map(
-// 			eventId => firebase.database().ref(`/events/${eventId}`).once('value')
-// 		);
-//
-// 		Promise.all(promises).then(results => {
-// 			results.forEach(result => {
-// 				values[result.key] = result.val();
-// 			});
-// 			dispatch({ type: EVENTS_FETCH_SUCCESS, payload: values });
-// 		});
-// 	});
-// };

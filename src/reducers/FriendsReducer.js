@@ -1,7 +1,8 @@
 import {
   USER_SEARCH_CHANGED,
   FIREBASE_USER_SEARCH,
-  UPDATE_FRIENDSLIST
+  UPDATE_FRIENDSLIST,
+  ADD_FRIEND
 } from '../actions/types';
 
 
@@ -19,6 +20,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, userSearchData: action.payload };
     case UPDATE_FRIENDSLIST:
       return { ...state, friendsList: action.payload };
+    case ADD_FRIEND:
+      return { ...state };
     default:
       return state;
   }
