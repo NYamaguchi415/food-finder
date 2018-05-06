@@ -62,7 +62,7 @@ class FriendsScreen extends Component {
     // Creates a new event in db when user proceeds to filter screen
     const eventId = firebase.database().ref('events').push();
     eventId.set(newEvent);
-    
+
     // Sets the created event id on every user involved as a currentEvent_id
     // COMMENTING THIS OUT FOR NOW FOR TESTING
     Object.keys(users).forEach((userId) => {
@@ -92,7 +92,7 @@ class FriendsScreen extends Component {
                     style: {
                       marginRight: 10,
                       fontSize: 15,
-                      color: (this.props.selectedFriends[key]) ? 'green' : 'white'
+                      color: (this.props.selectedFriends[key]) ? 'green' : 'green'
                     }
                   }}
                 />

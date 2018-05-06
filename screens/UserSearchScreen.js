@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { SearchBar, List, ListItem } from 'react-native-elements';
 import {
   userSearchChanged,
+  userSearchItemSelected,
   firebaseUserSearch,
   retrieveFriendsList
  } from '../src/actions/FriendsActions';
@@ -19,31 +20,46 @@ class UserSearchScreen extends Component {
     this.props.firebaseUserSearch(text);
   }
 
-  friendSelected = (friendUserId) => {
-    const ref = firebase.database().ref(`users/${this.props.user.uid}/friends`);
-    // .child(friendUserId);
-    ref.once('value',
-      (snapshot) => {
-          snapshot.hasChild(friendUserId);
-      }
-    );
-    // console.log(ref);
-    // .set({
-    //   accepted: true
-    // });
+  userSearchItemSelected = (selectedUserId) => {
+    this.userCheckFriendStatus(selectedUserId).then((isFriend) => {
+			if (isFriend) {
+        console.log('delete friend');
+        this.friendRemove(selectedUserId);
+			} else {
+        console.log('add friend');
+				this.friendAdd(selectedUserId);
+			}
+    });
   };
 
-  // friendAdd = (friendUserId) => {
-  //   firebase.database().ref(`users/${this.props.user.uid}/friends`)
-  //   .child(friendUserId)
-  //   .set({
-  //     accepted: true
-  //   });
-  // };
-  //
-  // friendRemove = (friendUserId) => {
-  //
-  // }
+  userCheckFriendStatus = (selectedUserId) => {
+  // Function to check whether the selected user is already a friend or not
+    return new Promise((resolve) => {
+      const ref = firebase.database().ref(`users/${this.props.user.uid}/friends`);
+      ref.once('value', snapshot => {
+        const val = snapshot.hasChild(selectedUserId);
+        if (val) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  friendAdd = (selectedUserId) => {
+    firebase.database().ref(`users/${this.props.user.uid}/friends`)
+    .child(selectedUserId)
+    .set({
+      accepted: true
+    });
+  };
+
+  friendRemove = (selectedUserId) => {
+    firebase.database().ref(`users/${this.props.user.uid}/friends`)
+    .child(selectedUserId)
+    .set(null);
+  }
 
   buttonPressed() {
     console.log('hello');
@@ -72,13 +88,13 @@ class UserSearchScreen extends Component {
                 title={data.username}
                 key={data.key}
                 roundAvatar
-                onPress={this.friendsListItemPressed.bind(this, data.key)}
+                onPress={this.userSearchItemSelected.bind(this, data.key)}
                 rightIcon={{ name: 'check',
                   type: 'font-awesome',
                   style: {
                     marginRight: 10,
                     fontSize: 15,
-                    color: (data.selected) ? 'green' : 'white'
+                    color: (this.props.friendsList[data.key]) ? 'green' : 'white'
                   }
                 }}
               />
@@ -102,6 +118,7 @@ const mapStateToProps = ({ friends, auth }) => {
 
 export default connect(mapStateToProps, {
   userSearchChanged,
+  userSearchItemSelected,
   firebaseUserSearch,
   retrieveFriendsList
 })(UserSearchScreen);
