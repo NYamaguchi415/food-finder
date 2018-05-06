@@ -43,6 +43,7 @@ class FriendsScreen extends Component {
   }
 
   friendSelected(friendUserId) {
+    console.log('friendPressed');
     console.log(friendUserId);
     // const data = this.state.friends;
     // data[index].selected = !data[index].selected;
@@ -50,26 +51,24 @@ class FriendsScreen extends Component {
   }
 
   proceed() {
-    this.props.retrieveFriendsList(this.props.user.uid);
-    console.log(this.props.friendsList);
-
-    // const users = this.userIdMapper();
-    // const newEvent = {
-    //   createdTime: new Date(),
-    //   match: 0,
-    //   users
-    // };
-    // // Creates a new event in db when user proceeds to filter screen
-    // const eventId = firebase.database().ref('events').push();
-    // eventId.set(newEvent);
-    // // Sets the created event id on every user involved as a currentEvent_id
+    const users = this.userIdMapper();
+    const newEvent = {
+      createdTime: new Date(),
+      match: 0,
+      users
+    };
+    // Creates a new event in db when user proceeds to filter screen
+    const eventId = firebase.database().ref('events').push();
+    eventId.set(newEvent);
+    // Sets the created event id on every user involved as a currentEvent_id
+    // COMMENTING THIS OUT FOR NOW FOR TESTING
     // Object.keys(users).forEach((userId) => {
     //   firebase.database().ref('users')
     //   .child(userId)
     //   .child('currentEvent_id')
     //   .set(eventId.key);
     // });
-    // this.props.navigation.navigate('filterScreen');
+    this.props.navigation.navigate('filterScreen');
   }
 
   render() {
