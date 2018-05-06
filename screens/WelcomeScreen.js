@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 
 class WelcomeScreen extends Component {
   componentWillMount() {
-    // this.props.navigation.navigate('mainScreen');
+    // this.props.navigation.navigate('userSearchScreen');
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('auth')}>
+      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('authStack')}>
         <View style={styles.mainViewStyle}>
           <Text style={styles.titleTextStyle}>
             Food Finder
@@ -26,15 +26,17 @@ function mapStateToProps({ auth }) {
 
 export default connect(mapStateToProps)(WelcomeScreen);
 
+
 const styles = StyleSheet.create({
   mainViewStyle: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FF875E',
     alignItems: 'center',
     justifyContent: 'center',
   },
   titleTextStyle: {
     fontSize: 40,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'white'
   }
 });

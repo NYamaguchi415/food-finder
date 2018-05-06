@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, StyleSheet, Button, Dimensions,
-  Keyboard, View, Text, TextInput } from 'react-native';
-import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLoginActions';
+  Keyboard, View, TextInput } from 'react-native';
+import { emailChanged,
+  passwordChanged,
+  usernameChanged,
+  loginUser,
+  signupUser } from '../src/actions/UserLoginActions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class AuthScreen extends Component {
+class SignUpScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      confirmationPass: ''
+    };
+  }
+
   componentWillReceiveProps(newProps) {
     this.onAuthComplete(newProps);
   }
 
   onAuthComplete(props) {
     if (props.user) {
-      this.props.navigation.navigate('friendsStack');
-      Keyboard.dismiss();
+      this.props.navigation.navigate('mainScreen');
     }
   }
 
@@ -26,34 +37,36 @@ class AuthScreen extends Component {
     this.props.passwordChanged(text);
   }
 
-  loginButtonPressed() {
-    const { email, password } = this.props;
-    this.props.loginUser({ email, password });
-    Keyboard.dismiss();
+  onUsernameChange(text) {
+    this.props.usernameChanged(text);
+  }
+
+  checkPasswords() {
+    if (this.props.password === this.state.confirmationPass) {
+      return true;
+    }
   }
 
   signupButtonPressed() {
-    this.props.navigation.navigate('signup');
-  }
-
-  renderButton() {
-    if (this.props.loading) {
-      return <ActivityIndicator size='large' />;
+    const { email, password, username } = this.props;
+    const pwCheck = this.checkPasswords();
+    if (pwCheck) {
+      this.props.signupUser({ email, password, username });
     }
-    return (
-      <Button
-        title='Log In'
-        style={styles.loginButtonStyle}
-        onPress={this.loginButtonPressed.bind(this)}
-        // onPress={() => this.props.navigation.navigate('mainScreen')}
-      />
-    );
   }
 
   render() {
     return (
         <View style={styles.mainViewStyle}>
           <View style={{ height: 160, width: SCREEN_WIDTH * 0.85 }}>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder='Username'
+              autoCorrect={false}
+              autoCapitalize='none'
+              onChangeText={this.onUsernameChange.bind(this)}
+              value={this.props.username}
+            />
             <TextInput
               style={styles.textInputStyle}
               placeholder='email@gmail.com'
@@ -64,26 +77,25 @@ class AuthScreen extends Component {
             />
             <TextInput
               style={styles.textInputStyle}
-              placeholder='password'
+              placeholder='Password'
               autoCorrect={false}
               secureTextEntry
               autoCapitalize='none'
               onChangeText={this.onPasswordChange.bind(this)}
               value={this.props.password}
             />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.errorTextStyle}>
-                {this.props.error}
-              </Text>
-              {this.renderButton()}
-            </View>
-            <View>
-              <Button
-                title='Sign Up'
-                style={styles.signInButtonStyle}
-                onPress={() => this.props.navigation.navigate('signup')}
-              />
-            </View>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder='Confirm Password'
+              autoCorrect={false}
+              secureTextEntry
+              autoCapitalize='none'
+              onChangeText={(text) => this.setState({ confirmationPass: text })}
+            />
+            <Button
+              title='Create Account'
+              onPress={this.signupButtonPressed.bind(this)}
+            />
           </View>
         </View>
     );
@@ -106,7 +118,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1
   },
-  loginButtonStyle: {
+  signInButtonStyle: {
     flex: 1,
     alignSelf: 'center'
   },
@@ -118,10 +130,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading, user } = auth;
-  return { email, password, error, loading, user };
+  const { email, password, username, error, loading, user } = auth;
+  return { email, password, username, error, loading, user };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
-})(AuthScreen);
+  emailChanged, passwordChanged, usernameChanged, loginUser, signupUser
+})(SignUpScreen);

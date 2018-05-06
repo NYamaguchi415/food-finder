@@ -99,21 +99,23 @@ class FilterScreen extends Component {
   render() {
     return (
       <View>
-        <View style={{paddingTop: 100, justifyContent: 'center', alignItems: 'center'}}>
-          <ListView
-              contentContainerStyle={styles.list}
-              dataSource={this.state.dataSource}
-              renderRow={(rowData) => 
-                <TouchableHighlight onPress={this._onPressRow.bind(this, rowData)}>
-                  <View style={{paddingHorizontal: 10}}>
-                    <Image style={{height:100, width: 100, opacity: rowData.selected ? 0.3 : 1}} source={{uri:rowData.img}} >                                            
-                    </Image>
-                    <Text className={'highlight'} style={styles.item}>{rowData.name}</Text>                      
-                    { rowData.selected ? <Text style={styles.item}> Selected</Text> : null }
-                  </View>
-                  </TouchableHighlight>
-              }
+        <View>
+          <List>
+            <FlatList
+              data={[{ key: 'American' }, { key: 'Chinese' }, { key: 'Dessert' },
+               { key: 'Greek' }, { key: 'Halal' }, { key: 'Hamburgers' },
+               { key: 'Indian' }, { key: 'Italian' }, { key: 'Japanese' },
+               { key: 'Mexican' }, { key: 'Sandwiches' }, { key: 'Thai' },
+               { key: 'Ukranian' }, { key: 'Vegetarian', }
+            ]}
+              renderItem={({ item }) =>
+                <ListItem
+                  title={item.key}
+                  hideChevron
                 />
+              }
+                /> 
+          </List>
         </View>
         <Button
           title='Start Swiping'

@@ -3,58 +3,38 @@ import { connect } from 'react-redux';
 import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
-
-const _ = require('lodash/core');
+import { retrieveFriendsList, selectFriend } from '../src/actions/FriendsActions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-class MainScreen extends Component {
-  static navigationOptions = {
+class FriendsScreen extends Component {
+  static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Food-Finder',
     headerRight: (
       <Button
-        onPress={() => alert('this will be used later')}
         title='+'
         color='blue'
+        onPress={() => navigation.navigate('userSearchScreen')}
       />
     )
-  }
+  })
 
-  constructor(props) {
-    super(props);
-    this.state = { friends: [] };
-  }
-
-  componentWillMount() {
-    const url = 'users';
-    // commented out for testing purposes
+  componentDidMount() {
+    // Check whether user has a current Event to send them to an Event if they have
     firebase.database().ref('users').child(this.props.user.uid).once('value')
     .then((userSnapshot) => {
         const eventId = userSnapshot.val().currentEvent_id;
-        console.log(eventId);
         if (eventId) {
               this.props.navigation.navigate('swipe');
         }
-      });
-    //
-    firebase.database().ref(url).once('value', (snapshot) => {
-      const result = snapshot.val();
-      const friends = [];
-      Object.keys(result).forEach((key) => {
-        if (key === this.props.user.uid) {
-          friends.push({ key, email: result[key].email, selected: true });
-        } else {
-          friends.push({ key, email: result[key].email, selected: false });
-        }
-        // friends.push({ key, email: result[key].email, selected: false });
-      });
-      this.setState({ friends });
-    });
+      }
+    );
+
+    this.props.retrieveFriendsList(this.props.user.uid);
   }
 
   userIdMapper() {
     const userIds = {};
-    // const selectedFriends = _.filter(this.state.friends, { selected: true });
     const selectedFriends = this.state.friends.filter(friend => friend.selected === true);
     selectedFriends.forEach((userId) => {
       userIds[userId.key] = 0;
@@ -62,14 +42,18 @@ class MainScreen extends Component {
     return userIds;
   }
 
-  friendSelected(index) {
-    const data = this.state.friends;
-    data[index].selected = !data[index].selected;
-    this.setState({ friends: data });
+  friendSelected(friendUserId) {
+    console.log('friendPressed');
+    console.log(friendUserId);
+    this.props.selectFriend(friendUserId);
+    // this.state.selectedFriends[friendUserId] = true;
+    // const data = this.state.friends;
+    // data[index].selected = !data[index].selected;
+    // this.setState({ friends: data });
   }
 
   proceed() {
-    const users = this.userIdMapper();
+    const users = this.props.selectedFriends;
     const newEvent = {
       createdTime: new Date(),
       match: 0,
@@ -78,14 +62,15 @@ class MainScreen extends Component {
     // Creates a new event in db when user proceeds to filter screen
     const eventId = firebase.database().ref('events').push();
     eventId.set(newEvent);
+    
     // Sets the created event id on every user involved as a currentEvent_id
+    // COMMENTING THIS OUT FOR NOW FOR TESTING
     Object.keys(users).forEach((userId) => {
       firebase.database().ref('users')
       .child(userId)
       .child('currentEvent_id')
       .set(eventId.key);
     });
-
     this.props.navigation.navigate('filterScreen');
   }
 
@@ -96,37 +81,40 @@ class MainScreen extends Component {
         <View style={{ height: SCREEN_HEIGHT * 0.8 }}>
           <List>
             {
-              this.state.friends.filter(
-                user => user.key !== this.props.user.uid
-              ).map((item, i) => (
+              (Object.keys(this.props.friendsList)).map((key) => (
                 <ListItem
-                  title={item.email}
-                  key={i}
+                  title={this.props.friendsList[key].userName}
+                  key={key}
                   roundAvatar
-                  onPress={this.friendSelected.bind(this, i)}
+                  onPress={this.friendSelected.bind(this, key)}
                   rightIcon={{ name: 'check',
                     type: 'font-awesome',
-                    style: { marginRight: 10,
+                    style: {
+                      marginRight: 10,
                       fontSize: 15,
-                      color: (item.selected) ? 'green' : 'white'
+                      color: (this.props.selectedFriends[key]) ? 'green' : 'white'
                     }
                   }}
                 />
               ))
             }
           </List>
+          <Button
+            title='Proceed'
+            onPress={this.proceed.bind(this)}
+          />
         </View>
-        <Button
-          title='Proceed'
-          onPress={this.proceed.bind(this)}
-        />
       </View>
     );
   }
 }
 
-function mapStateToProps({ auth }) {
-  return { user: auth.user };
-}
+const mapStateToProps = ({ auth, friends }) => {
+  const { user } = auth;
+  const { friendsList, selectedFriends } = friends;
+  return { user, friendsList, selectedFriends };
+};
 
-export default connect(mapStateToProps)(MainScreen);
+export default connect(mapStateToProps, {
+  retrieveFriendsList, selectFriend
+})(FriendsScreen);
