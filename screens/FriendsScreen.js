@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
-import { retrieveFriendsList } from '../src/actions/FriendsActions';
+import { retrieveFriendsList, selectFriend } from '../src/actions/FriendsActions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -45,13 +45,15 @@ class FriendsScreen extends Component {
   friendSelected(friendUserId) {
     console.log('friendPressed');
     console.log(friendUserId);
+    this.props.selectFriend(friendUserId);
+    // this.state.selectedFriends[friendUserId] = true;
     // const data = this.state.friends;
     // data[index].selected = !data[index].selected;
     // this.setState({ friends: data });
   }
 
   proceed() {
-    const users = this.userIdMapper();
+    const users = this.props.selectedFriends;
     const newEvent = {
       createdTime: new Date(),
       match: 0,
@@ -60,14 +62,15 @@ class FriendsScreen extends Component {
     // Creates a new event in db when user proceeds to filter screen
     const eventId = firebase.database().ref('events').push();
     eventId.set(newEvent);
+    
     // Sets the created event id on every user involved as a currentEvent_id
     // COMMENTING THIS OUT FOR NOW FOR TESTING
-    // Object.keys(users).forEach((userId) => {
-    //   firebase.database().ref('users')
-    //   .child(userId)
-    //   .child('currentEvent_id')
-    //   .set(eventId.key);
-    // });
+    Object.keys(users).forEach((userId) => {
+      firebase.database().ref('users')
+      .child(userId)
+      .child('currentEvent_id')
+      .set(eventId.key);
+    });
     this.props.navigation.navigate('filterScreen');
   }
 
@@ -83,13 +86,13 @@ class FriendsScreen extends Component {
                   title={this.props.friendsList[key].userName}
                   key={key}
                   roundAvatar
-                  onPress={this.friendSelected.bind(key)}
+                  onPress={this.friendSelected.bind(this, key)}
                   rightIcon={{ name: 'check',
                     type: 'font-awesome',
                     style: {
                       marginRight: 10,
                       fontSize: 15,
-                      color: (this.props.friendsList[key].selected) ? 'green' : 'white'
+                      color: (this.props.selectedFriends[key]) ? 'green' : 'white'
                     }
                   }}
                 />
@@ -108,10 +111,10 @@ class FriendsScreen extends Component {
 
 const mapStateToProps = ({ auth, friends }) => {
   const { user } = auth;
-  const { friendsList } = friends;
-  return { user, friendsList };
+  const { friendsList, selectedFriends } = friends;
+  return { user, friendsList, selectedFriends };
 };
 
 export default connect(mapStateToProps, {
-  retrieveFriendsList
+  retrieveFriendsList, selectFriend
 })(FriendsScreen);

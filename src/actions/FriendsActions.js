@@ -3,7 +3,8 @@ import firebase from '../../firebaseInit';
 import {
 	USER_SEARCH_CHANGED,
   FIREBASE_USER_SEARCH,
-  UPDATE_FRIENDSLIST
+  UPDATE_FRIENDSLIST,
+  SELECT_FRIEND
 } from './types';
 
 export const userSearchChanged = (text) => {
@@ -12,6 +13,13 @@ export const userSearchChanged = (text) => {
 		payload: text
 	};
 };
+
+export const selectFriend = (friendId) => {
+  return {
+    type: SELECT_FRIEND,
+    payload: friendId
+  }
+}
 
 export const firebaseUserSearch = (text) => {
 	// function to search for users based on user input
