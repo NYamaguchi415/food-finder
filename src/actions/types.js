@@ -12,6 +12,8 @@ export const FRIEND_ADD = 'friend_add';
 
 export const SELECT_FRIEND = 'select_friend';
 
+export const FILTER_SELECTED = 'filter_selected';
+
 export const RESTAURANT_SWIPE_YES = 'restaurant_swipe_yes';
 export const RESTAURANT_SWIPE_YES_SUCCESS = 'restaurant_swipe_yes_success';
 export const RESTAURANT_SWIPE_YES_FAIL = 'restaurant_swipe_yes_success';
