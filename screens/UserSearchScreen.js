@@ -11,9 +11,14 @@ import {
 import firebase from '../firebaseInit';
 
 class UserSearchScreen extends Component {
+
   static navigationOptions = {
     title: 'User Search',
   };
+
+  componentDidMount() {
+    this.searchBarChanged();
+  }
 
   searchBarChanged(text) {
     this.props.userSearchChanged(text);
@@ -21,19 +26,18 @@ class UserSearchScreen extends Component {
   }
 
   userSearchItemSelected = (selectedUserId) => {
+    // Function to add or delete user as friend when selected from listview
     this.userCheckFriendStatus(selectedUserId).then((isFriend) => {
 			if (isFriend) {
-        console.log('delete friend');
         this.friendRemove(selectedUserId);
 			} else {
-        console.log('add friend');
 				this.friendAdd(selectedUserId);
 			}
     });
   };
 
   userCheckFriendStatus = (selectedUserId) => {
-  // Function to check whether the selected user is already a friend or not
+    // Function to check whether the selected user is already a friend or not
     return new Promise((resolve) => {
       const ref = firebase.database().ref(`users/${this.props.user.uid}/friends`);
       ref.once('value', snapshot => {
@@ -48,6 +52,7 @@ class UserSearchScreen extends Component {
   };
 
   friendAdd = (selectedUserId) => {
+    // Function to add user as friend
     firebase.database().ref(`users/${this.props.user.uid}/friends`)
     .child(selectedUserId)
     .set({
@@ -56,6 +61,7 @@ class UserSearchScreen extends Component {
   };
 
   friendRemove = (selectedUserId) => {
+    // Function to remove user from friends
     firebase.database().ref(`users/${this.props.user.uid}/friends`)
     .child(selectedUserId)
     .set(null);

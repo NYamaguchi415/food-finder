@@ -59,15 +59,15 @@ export const signupUser = ({ email, password, username }) => {
 };
 
 const usernameCheck = (username) => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		firebase.database().ref('users')
 		.orderByChild('username').equalTo(username)
 		.on('value', snapshot => {
 			const val = snapshot.val();
 			if (val) {
-				return resolve(false);
+				resolve(false);
 			} else {
-				return resolve(true);
+				resolve(true);
 			}
 		});
 	});

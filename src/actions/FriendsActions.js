@@ -18,11 +18,11 @@ export const selectFriend = (friendId) => {
   return {
     type: SELECT_FRIEND,
     payload: friendId
-  }
-}
+  };
+};
 
 export const firebaseUserSearch = (text) => {
-	// function to search for users based on user input
+	// function to search for users based on user search input
   return dispatch => {
     firebase.database().ref('users')
     .orderByChild('username')
@@ -48,7 +48,6 @@ export const firebaseUserSearch = (text) => {
 
 export const retrieveFriendsList = (currentUserId) => {
 	// function to retrieve data for friendsList
-
 	// retrieve logged in user's friends' uids
   return dispatch => {
     firebase.database().ref(`users/${currentUserId}/friends`)

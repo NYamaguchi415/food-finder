@@ -31,7 +31,7 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         selectedFriends[action.payload] = true;
       }
-      return { ... state, selectedFriends}    
+      return { ...state, selectedFriends };
     default:
       return state;
   }

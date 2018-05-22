@@ -33,23 +33,17 @@ class FriendsScreen extends Component {
     this.props.retrieveFriendsList(this.props.user.uid);
   }
 
-  userIdMapper() {
-    const userIds = {};
-    const selectedFriends = this.state.friends.filter(friend => friend.selected === true);
-    selectedFriends.forEach((userId) => {
-      userIds[userId.key] = 0;
-    });
-    return userIds;
-  }
+  // userIdMapper() {
+  //   const userIds = {};
+  //   const selectedFriends = this.state.friends.filter(friend => friend.selected === true);
+  //   selectedFriends.forEach((userId) => {
+  //     userIds[userId.key] = 0;
+  //   });
+  //   return userIds;
+  // }
 
   friendSelected(friendUserId) {
-    console.log('friendPressed');
-    console.log(friendUserId);
     this.props.selectFriend(friendUserId);
-    // this.state.selectedFriends[friendUserId] = true;
-    // const data = this.state.friends;
-    // data[index].selected = !data[index].selected;
-    // this.setState({ friends: data });
   }
 
   proceed() {
@@ -65,12 +59,12 @@ class FriendsScreen extends Component {
 
     // Sets the created event id on every user involved as a currentEvent_id
     // COMMENTING THIS OUT FOR NOW FOR TESTING
-    Object.keys(users).forEach((userId) => {
-      firebase.database().ref('users')
-      .child(userId)
-      .child('currentEvent_id')
-      .set(eventId.key);
-    });
+    // Object.keys(users).forEach((userId) => {
+    //   firebase.database().ref('users')
+    //   .child(userId)
+    //   .child('currentEvent_id')
+    //   .set(eventId.key);
+    // });
     this.props.navigation.navigate('filterScreen');
   }
 
@@ -92,7 +86,7 @@ class FriendsScreen extends Component {
                     style: {
                       marginRight: 10,
                       fontSize: 15,
-                      color: (this.props.selectedFriends[key]) ? 'green' : 'green'
+                      color: (this.props.selectedFriends[key]) ? 'green' : 'white'
                     }
                   }}
                 />
