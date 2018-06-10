@@ -26,7 +26,6 @@ function mapStateToProps({ auth }) {
 
 export default connect(mapStateToProps)(WelcomeScreen);
 
-
 const styles = StyleSheet.create({
   mainViewStyle: {
     flex: 1,
