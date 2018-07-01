@@ -3,7 +3,9 @@ import {
     RESTAURANT_SWIPE_YES_SUCCESS,
     RESTAURANT_SWIPE_YES_FAIL,
     RESTAURANT_SWIPE_NO,
+    RESTAURANT_SWIPE_NO_SUCCESS,
     MATCH_OCCURED,
+    RESTAURANT_MATCH,
     GET_RESTAURANTS,
     SET_EVENT_ID,
     SET_ACTIVE_RESTAURANT,
@@ -35,6 +37,8 @@ export default (state = INITIAL_STATE, action) => {
             return  state;            
         case RESTAURANT_SWIPE_YES_SUCCESS:
             return {...state, activeRestaurant: action.payload, }
+        case RESTAURANT_SWIPE_NO_SUCCESS:
+            return {...state, activeRestaurant: action.payload, }
         case SET_USERS:
             return {...state, users: action.payload};
         case INDEX_UP:
@@ -42,6 +46,7 @@ export default (state = INITIAL_STATE, action) => {
         case OUT_OF_MATCHES:
             return {...state, outOfMatches: true};
         case MATCH_OCCURED:
+        case RESTAURANT_MATCH:
             return {...state, matchOccured: true}
         default:
 			return state;

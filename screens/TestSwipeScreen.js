@@ -30,6 +30,9 @@ class TestSwipeScreen extends Component {
     }
 
     renderSwipeCards() {
+        if (this.props.matchOccured) {
+            this.props.navigation.navigate('results');
+        }
         if (!this.props.activeRestaurant) return; 
         if (!this.props.restaurantList.length) {
             return;

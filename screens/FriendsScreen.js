@@ -48,6 +48,7 @@ class FriendsScreen extends Component {
 
   proceed() {
     const users = this.props.selectedFriends;
+    users[this.props.user.uid] = true;
     const newEvent = {
       createdTime: new Date(),
       match: 0,
@@ -59,12 +60,12 @@ class FriendsScreen extends Component {
 
     // Sets the created event id on every user involved as a currentEvent_id
     // COMMENTING THIS OUT FOR NOW FOR TESTING
-    // Object.keys(users).forEach((userId) => {
-    //   firebase.database().ref('users')
-    //   .child(userId)
-    //   .child('currentEvent_id')
-    //   .set(eventId.key);
-    // });
+    Object.keys(users).forEach((userId) => {
+      firebase.database().ref('users')
+      .child(userId)
+      .child('currentEvent_id')
+      .set(eventId.key);
+    });
     this.props.navigation.navigate('filterScreen');
   }
 

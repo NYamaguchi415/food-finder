@@ -29,13 +29,7 @@ export default (state = INITIAL_STATE, action) => {
       const friendsList = Object.assign({},state.friendsList);
       const selected = friendsList[action.payload].selected;
       friendsList[action.payload].selected = !selected;
-      return { ... state, friendsList}    
-//       if (selectedFriends[action.payload]) {
-//         delete selectedFriends[action.payload];
-//       } else {
-//         selectedFriends[action.payload] = true;
-//       }
-//       return { ...state, selectedFriends };
+      return { ... state, friendsList}
     default:
       return state;
   }

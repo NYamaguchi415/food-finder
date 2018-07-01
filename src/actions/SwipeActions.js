@@ -5,6 +5,7 @@ import {
     RESTAURANT_SWIPE_YES_SUCCESS,
     RESTAURANT_SWIPE_YES_FAIL,
     RESTAURANT_SWIPE_NO,
+    RESTAURANT_SWIPE_NO_SUCCESS,
     RESTAURANT_MATCH,
     GET_RESTAURANTS,
     SET_EVENT_ID,
@@ -92,7 +93,7 @@ export const restaurantSwipeNo = (index, restaurants, event, restaurant, users) 
                 }                 
                 const key = Object.keys(restaurants)[index];
                 const active = restaurants[key];                
-                dispatch({type: RESTAURANT_SWIPE_YES_SUCCESS, payload: active});
+                dispatch({type: RESTAURANT_SWIPE_NO_SUCCESS, payload: active});
             }})
 
     }

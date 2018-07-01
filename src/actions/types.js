@@ -13,14 +13,17 @@ export const FRIEND_ADD = 'friend_add';
 export const SELECT_FRIEND = 'select_friend';
 
 export const FILTER_SELECTED = 'filter_selected';
+export const FILTERS_FINALIZED = 'FILTERS_FINALIZED'
+export const SET_RESTAURANTS_AS_OWNER = 'SET_RESTAURANTS_AS_OWNER';
+export const SET_RESTAURANTS_AS_OWNER_FAILURE = 'SET_RESTAURANTS_AS_OWNER_FAILURE';
 
 export const RESTAURANT_SWIPE_YES = 'restaurant_swipe_yes';
 export const RESTAURANT_SWIPE_YES_SUCCESS = 'restaurant_swipe_yes_success';
-export const RESTAURANT_SWIPE_YES_FAIL = 'restaurant_swipe_yes_success';
+export const RESTAURANT_SWIPE_YES_FAIL = 'restaurant_swipe_yes_fail';
 
 export const RESTAURANT_SWIPE_NO = 'restaurant_swipe_no';
 export const RESTAURANT_SWIPE_NO_SUCCESS = 'restaurant_swipe_no_success';
-export const RESTAURANT_SWIPE_NO_FAIL = 'restaurant_swipe_no_success';
+export const RESTAURANT_SWIPE_NO_FAIL = 'restaurant_swipe_no_fail';
 
 export const MATCH_OCCURED = 'match_occured';
 export const OUT_OF_MATCHES = 'out_of_matches';
