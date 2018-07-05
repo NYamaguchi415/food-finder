@@ -14,7 +14,7 @@ class FriendsScreen extends Component {
       <Button
         title='+'
         color='blue'
-        onPress={() => navigation.navigate('userSearchScreen')}
+        onPress={() => navigation.navigate('UserSearch')}
       />
     )
   })

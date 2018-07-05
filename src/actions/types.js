@@ -11,3 +11,5 @@ export const UPDATE_FRIENDSLIST = 'update_friendslist';
 export const FRIEND_ADD = 'friend_add';
 
 export const SELECT_FRIEND = 'select_friend';
+
+export const UPDATE_HOME_EVENTS = 'update_home_events';

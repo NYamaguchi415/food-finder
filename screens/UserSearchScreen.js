@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { SearchBar, List, ListItem } from 'react-native-elements';
 import {
@@ -67,10 +67,6 @@ class UserSearchScreen extends Component {
     .set(null);
   }
 
-  buttonPressed() {
-    console.log('hello');
-  }
-
   friendsListItemPressed(friendUserId) {
     this.friendSelected(friendUserId);
   }
@@ -107,10 +103,6 @@ class UserSearchScreen extends Component {
             ))
           }
         </List>
-        <Button
-          title='test check'
-          onPress={this.buttonPressed.bind(this)}
-        />
       </View>
     );
   }
