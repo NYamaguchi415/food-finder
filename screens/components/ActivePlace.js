@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import {yelpAPIKey} from '../../config';
 import axios from 'axios';
-// import 
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -145,12 +145,7 @@ export default ActivePlace;
 
 const styles = {
     timeRowStyle: {
-        // height: 50,
-
-        // flex: 1,
-        // paddingTop: 50,
         paddingBottom: 25,
-        // justifyContent: 'space-around',
         justifyContent: 'center',
         alignItems: 'center',                                
         flexDirection: 'row'
@@ -164,16 +159,11 @@ const styles = {
     },
     restaurantImageStyle: {        
         height: SCREEN_WIDTH * 0.9, 
-        // flex: 1,                        
         width: null,
         borderRadius: 25,
-        // marginRight: SCREEN_WIDTH * 0.05,
-        // marginLeft: SCREEN_WIDTH * 0.05
     },
     imageRowStyle: {
-        // flex: 1,
         borderBottomWidth: 1,
-        // padding: 5,
         paddingBottom: 20,
         backgroundColor: '#fff',
         justifyContent: 'flex-start',
@@ -183,23 +173,14 @@ const styles = {
     },    
     nameStyle:{
         height: 50,
-        // width: SCREEN_WIDTH,
-        
-        // maxHeight: 100,    
-        // flex: 3
-        // flexShrink: 2
     }, 
     otherStyle: {
-        // flex: 1,
         flexDirection:'row'
     },
     detailHeaderRowStyle: {
-        // flex: 1,      
         flexDirection:'row',
-        // justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: SCREEN_WIDTH * 0.05
-        
+        paddingHorizontal: SCREEN_WIDTH * 0.05        
     },
     actualStyle: {
         flexDirection:'row',
@@ -208,18 +189,8 @@ const styles = {
     },
     detailSubHeaderRowStyle: {
         padding: SCREEN_WIDTH * 0.05
-        // flex: 1,
-        // height: 50,
-        // paddingTop: 10,
-        // paddingLeft: 20,
-        // paddingRight: 20,
-        // justifyContent: 'flex-start',
-        // justifyContent: 'center',        
-        // alignItems: 'center',                                
-        // flexDirection: 'row'
     },
     buttonRowStyle: {
-        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',                                
         flexDirection: 'row'

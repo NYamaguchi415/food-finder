@@ -1,5 +1,6 @@
 export const EMAIL_CHANGED = 'email_changed';
 export const PASSWORD_CHANGED = 'password_changed';
+export const CONFIRMATION_PASSWORD_CHANGED = 'confirmation_password_changed';
 export const USERNAME_CHANGED = 'username_changed';
 export const LOGIN_USER_SUCCESS = 'login_user_success';
 export const LOGIN_USER_FAIL = 'login_user_fail';
@@ -29,6 +30,7 @@ export const MATCH_OCCURED = 'match_occured';
 export const OUT_OF_MATCHES = 'out_of_matches';
 
 export const GET_RESTAURANTS = 'get_restaurants';
+export const GET_RESTAURANTS_FAIL = 'get_restaurants_fail';
 export const SET_EVENT_ID = 'set_event_id';
 
 export const SET_ACTIVE_RESTAURANT= 'set_active_restaurant';

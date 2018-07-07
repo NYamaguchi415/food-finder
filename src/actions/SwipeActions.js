@@ -8,6 +8,7 @@ import {
     RESTAURANT_SWIPE_NO_SUCCESS,
     RESTAURANT_MATCH,
     GET_RESTAURANTS,
+    GET_RESTAURANTS_FAIL,
     SET_EVENT_ID,
     SET_ACTIVE_RESTAURANT,
     INDEX_UP,
@@ -15,24 +16,6 @@ import {
     OUT_OF_MATCHES,
     MATCH_OCCURED
 } from './types';
-
-export const getRestaurant = (keyName) => {
-    const url = this.buildUrlFromId(keyName);
-    const options = {headers: {authorization: `Bearer ${yelpAPIKey}`}};
-    axios.get(url, options).then((response)=>{
-      let business = response.data;
-      console.log('active place', business);
-
-    //   dispatch({type: GET_RESTAURANTS, payload: })
-      this.setState({
-        restaurant: {
-            picture: business.image_url,
-            name: business.name,
-            votes: 0
-        }
-      });
-    })
-}
 
 export const matchOccured = (dispatch, snapshot) => {
     if (snapshot.val() ===1) {
@@ -50,8 +33,6 @@ export const getRestaurants = (uId) => {
             firebase.database().ref('events').once('value')
             .then((eventSnapshot)=> {                
                 const event = eventSnapshot.child(eventId).val();
-
-                
                 const users = event.users;
                 const restaurants = event.restaurants;
                 const activeRestaurantKey = Object.keys(restaurants)[0];
@@ -65,7 +46,12 @@ export const getRestaurants = (uId) => {
                 dispatch({type: SET_USERS, payload: users});                
                 dispatch({type: GET_RESTAURANTS, payload: restaurants})
                 dispatch({type: SET_ACTIVE_RESTAURANT, payload: activeRestaurant})
-            })        
+            }).catch((e)=>{
+                dispatch({type: GET_RESTAURANTS_FAIL})            
+            })
+        })
+        .catch((e)=>{
+            dispatch({type: GET_RESTAURANTS_FAIL})            
         })
     }
 }

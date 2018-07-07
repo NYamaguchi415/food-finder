@@ -3,6 +3,7 @@ import firebase from '../../firebaseInit';
 import {
 	EMAIL_CHANGED,
 	PASSWORD_CHANGED,
+	CONFIRMATION_PASSWORD_CHANGED,
 	USERNAME_CHANGED,
 	LOGIN_USER_SUCCESS,
 	LOGIN_USER_FAIL,
@@ -19,6 +20,13 @@ export const emailChanged = (text) => {
 export const passwordChanged = (text) => {
 	return {
 		type: PASSWORD_CHANGED,
+		payload: text
+	};
+};
+
+export const confirmationPasswordChanged = (text) => {
+	return {
+		type: CONFIRMATION_PASSWORD_CHANGED,
 		payload: text
 	};
 };

@@ -9,6 +9,7 @@ import firebase from '../firebaseInit';
 import {getRestaurants, restaurantSwipeYes, restaurantSwipeNo} from '../src/actions/SwipeActions'
 import ActivePlace from './components/ActivePlace';
 import InactivePlace from './components/InactivePlace';
+import { swipeScreenStyles as styles } from './styles/Styles';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -19,25 +20,21 @@ class TestSwipeScreen extends Component {
         this.props.getRestaurants(uid);        
     }
 
-    renderRestaurants() {
-        if (Object.keys(this.props.restaurants).length > 0) {
-            const entries = Object.keys(this.props.restaurants);
-            entries.map(key => <Text>HI: {this.props.restaurants[key].id}</Text>)
-        } else {
-            console.log('no restaurants')
-            return null;
-        }
-    }
-
     renderSwipeCards() {
+        if (this.props.error) {
+            return (<Text>ERROR</Text>)
+        }
+
         if (this.props.matchOccured) {
             this.props.navigation.navigate('results');
         }
+        
         if (!this.props.activeRestaurant) return; 
         if (!this.props.restaurantList.length) {
             return;
         }
-        // console.log(this.state.restaurantList);
+
+        console.log(this.props.restaurantList);
         return (<SwipeCards
                 cards={this.props.restaurantList}
                 renderCard={(cardData) => <ActivePlace 
@@ -107,63 +104,9 @@ class TestSwipeScreen extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    card: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 300,
-        height: 300,
-      },
-    mainViewStyle: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white'
-    },
-    confirmButtonStyle: {
-        flex: 1,
-        paddingLeft: 5,
-        height: 40,
-        fontSize: 20,
-        backgroundColor: 'green',
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-    cancelButtonStyle: {
-        flex: 1,
-        paddingLeft: 5,
-        height: 40,
-        fontSize: 20,
-        backgroundColor: 'red',
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-    textInputStyle: {
-        flex: 1,
-        paddingLeft: 5,
-        height: 40,
-        fontSize: 20,
-        backgroundColor: 'white',
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-    signInButtonStyle: {
-        flex: 1,
-        alignSelf: 'center'
-    },
-    errorTextStyle: {
-        fontSize: 20,
-        // alignSelf: 'center',
-        color: 'red'
-    },
-    swipeImageStyle: {
-        flex: 1,
-        justifyContent: 'center'
-    }
-});
-
 const mapStateToProps = ({auth, swipe}) => {
     const {
+        error,
         restaurants, 
         activeRestaurant, 
         index,
@@ -171,11 +114,12 @@ const mapStateToProps = ({auth, swipe}) => {
         matchOccured, 
         eventId, 
         users } = swipe;
-    const restaurantList = Object.values(restaurants).slice(index) || [];
+    const restaurantList = restaurants ? Object.values(restaurants).slice(index) || [] : [];
     const time = 120;
     const outOfTime = false;
     console.log(swipe);
     return { user: auth.user, 
+        error,
         time, outOfTime, 
         outOfMatches, matchOccured, 
         restaurants, eventId, index, activeRestaurant, users, restaurantList };

@@ -11,11 +11,13 @@ import {
     SET_ACTIVE_RESTAURANT,
     INDEX_UP,
     SET_USERS,
-    OUT_OF_MATCHES
+    OUT_OF_MATCHES,
+    GET_RESTAURANTS_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    restaurants: [],
+    error: null,
+    restaurants: {},
     users: [],
     eventId: null,
     index: null,   
@@ -28,7 +30,9 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
 	switch (action.type) {
 		case GET_RESTAURANTS:
-            return { ...state, restaurants: action.payload }
+            return { ...state, restaurants: action.payload, error: false }
+        case GET_RESTAURANTS_FAIL:
+            return { ...state, error: true }
         case SET_EVENT_ID: 
             return  { ...state, eventId: action.payload }
         case SET_ACTIVE_RESTAURANT:

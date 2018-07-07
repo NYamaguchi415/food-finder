@@ -33,7 +33,7 @@ class FilterScreen extends Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.restaurantsSet) {
-        this.props.navigation.navigate('swipeScreen');
+        this.props.navigation.navigate('swipe');
     }
   }
 
@@ -64,8 +64,8 @@ class FilterScreen extends Component {
           onPress={this.props.setRestaurantsAsGroupOwner.bind(this, this.props.filterList, this.props.auth)}
         />
         <Text style={styles.errorTextStyle}>
-          {this.props.error}
-        </Text>
+          {this.props.error ? 'Something went wrong' : ''}
+        </Text> 
       </View>
     );
   }

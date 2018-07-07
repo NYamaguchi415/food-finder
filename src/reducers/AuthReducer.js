@@ -1,15 +1,17 @@
 import {
 	EMAIL_CHANGED,
 	PASSWORD_CHANGED,
+	CONFIRMATION_PASSWORD_CHANGED,
 	USERNAME_CHANGED,
 	LOGIN_USER_SUCCESS,
 	LOGIN_USER_FAIL,
 	LOGIN_USER } from '../actions/types';
 
 const INITIAL_STATE = {
-	email: 'naoki@havenlife.com',
+	email: 'roberto+test0707f@havenlife.com',
 	password: 'Password123',
-	username: '',
+	confirmationPassword: 'Password123',
+	username: 'robertotest0707f',
 	user: null,
 	error: '',
 	loading: false
@@ -21,6 +23,8 @@ export default (state = INITIAL_STATE, action) => {
 			return { ...state, email: action.payload, error: '' };
 		case PASSWORD_CHANGED:
 			return { ...state, password: action.payload, error: '' };
+		case CONFIRMATION_PASSWORD_CHANGED:
+			return { ...state, confirmationPassword: action.payload, error: '' };
 		case USERNAME_CHANGED:
 			return { ...state, username: action.payload, error: '' };
 		case LOGIN_USER_SUCCESS:

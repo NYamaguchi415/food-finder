@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ActivityIndicator, StyleSheet, Button, Dimensions,
+import { ActivityIndicator, Button, Dimensions,
   Keyboard, View, Text, TextInput } from 'react-native';
 import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLoginActions';
-
+import { authScreenStyles as styles } from './styles/Styles';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class AuthScreen extends Component {
@@ -45,7 +45,6 @@ class AuthScreen extends Component {
         title='Log In'
         style={styles.loginButtonStyle}
         onPress={this.loginButtonPressed.bind(this)}
-        // onPress={() => this.props.navigation.navigate('mainScreen')}
       />
     );
   }
@@ -89,33 +88,6 @@ class AuthScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  mainViewStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FF875E'
-  },
-  textInputStyle: {
-    flex: 1,
-    paddingLeft: 5,
-    height: 40,
-    fontSize: 20,
-    backgroundColor: 'white',
-    borderColor: 'gray',
-    borderWidth: 1
-  },
-  loginButtonStyle: {
-    flex: 1,
-    alignSelf: 'center'
-  },
-  errorTextStyle: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: 'red'
-  }
-});
 
 const mapStateToProps = ({ auth }) => {
   const { email, password, error, loading, user } = auth;

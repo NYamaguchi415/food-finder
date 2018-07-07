@@ -4,21 +4,16 @@ import { ActivityIndicator, StyleSheet, Button, Dimensions,
   Keyboard, View, TextInput } from 'react-native';
 import { emailChanged,
   passwordChanged,
+  confirmationPasswordChanged,
   usernameChanged,
   loginUser,
   signupUser } from '../src/actions/UserLoginActions';
+  
+import { signUpScreenStyles as styles } from './styles/Styles';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-
+  
 class SignUpScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      confirmationPass: ''
-    };
-  }
-
   componentWillReceiveProps(newProps) {
     this.onAuthComplete(newProps);
   }
@@ -37,12 +32,16 @@ class SignUpScreen extends Component {
     this.props.passwordChanged(text);
   }
 
+  onConfirmationPasswordChange(text) {
+    this.props.confirmationPasswordChanged(text);
+  }
+
   onUsernameChange(text) {
     this.props.usernameChanged(text);
   }
 
   checkPasswords() {
-    if (this.props.password === this.state.confirmationPass) {
+    if (this.props.password === this.props.confirmationPassword) {
       return true;
     }
   }
@@ -90,7 +89,8 @@ class SignUpScreen extends Component {
               autoCorrect={false}
               secureTextEntry
               autoCapitalize='none'
-              onChangeText={(text) => this.setState({ confirmationPass: text })}
+              onChangeText={this.onConfirmationPasswordChange.bind(this)}
+              value={this.props.confirmationPassword}              
             />
             <Button
               title='Create Account'
@@ -102,38 +102,11 @@ class SignUpScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  mainViewStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FF875E'
-  },
-  textInputStyle: {
-    flex: 1,
-    paddingLeft: 5,
-    height: 40,
-    fontSize: 20,
-    backgroundColor: 'white',
-    borderColor: 'gray',
-    borderWidth: 1
-  },
-  signInButtonStyle: {
-    flex: 1,
-    alignSelf: 'center'
-  },
-  errorTextStyle: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: 'red'
-  }
-});
-
 const mapStateToProps = ({ auth }) => {
-  const { email, password, username, error, loading, user } = auth;
-  return { email, password, username, error, loading, user };
+  const { email, password, confirmationPassword, username, error, loading, user } = auth;
+  return { email, password, confirmationPassword, username, error, loading, user };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, usernameChanged, loginUser, signupUser
+  emailChanged, passwordChanged, usernameChanged, loginUser, signupUser, confirmationPasswordChanged
 })(SignUpScreen);

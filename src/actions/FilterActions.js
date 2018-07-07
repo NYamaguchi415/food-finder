@@ -19,7 +19,6 @@ export const selectFilter = (filter) => {
 export const setRestaurantsAsGroupOwner = (filters, auth) => {
   return (dispatch) => {
     dispatch({type: FILTERS_FINALIZED});
-    console.log(filters);
     const filterObject = filters;
     const categories = Object.keys(filterObject);
     const url = buildUrlFromCategories(categories);  
@@ -27,14 +26,9 @@ export const setRestaurantsAsGroupOwner = (filters, auth) => {
     axios.get(url, options)
     .then(response=>proceed(dispatch, response, auth))
     .catch((e)=>{
-      dispatch({type: FILTERS_FINALIZED});
+      dispatch({type: SET_RESTAURANTS_AS_OWNER_FAILURE});
     })
-
   }
-}
-
-getRestaurants = () => {
-  return axios.get(url, options);
 }
 
 proceed = (dispatch, response, auth) => {
@@ -44,7 +38,6 @@ proceed = (dispatch, response, auth) => {
     const eventId = snapshot.val().currentEvent_id;
     let restaurants = {};
     businesses.forEach((r)=>{
-      // const key = r.name.replace(/[\.\#\$\[\]\/]/g, "");
       const key = r.id;
       restaurants[key] = {
           name: r.name, no: 0, yes: 0, id: r.id
@@ -62,15 +55,9 @@ proceed = (dispatch, response, auth) => {
 buildUrlFromCategories= (categories) => {
   categories.forEach((c, i)=> {
     categories[i] = c.toLowerCase();
-    // url += c.toLowerCase() + ',';
   })
-
   const categoryString = categories.join(",");
-
   let url = 'https://api.yelp.com/v3/businesses/search?term=restaurants&location=NewYork';
   url += '&categories=' + categoryString;
-  // categories.forEach((c)=> {
-  //   url += c.toLowerCase() + ',';
-  // })
   return url;
 }
