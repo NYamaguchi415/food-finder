@@ -13,26 +13,10 @@ export const retrieveHomeEvents = (currentUserId) => {
       (snapshot) => {
         const data = snapshot.val() || {};
 				console.log(data);
-        // const eventIds = Object.keys(data);
         dispatch({
           type: UPDATE_HOME_EVENTS,
           payload: data
         });
-				// const promises = eventIds.map(
-				// 	userId => firebase.database().ref(`users/${userId}`).once('value')
-				// );
-        //
-				// // retrieve friends' usernames by using uids
-				// Promise.all(promises).then(results => {
-				// 	results.forEach(result => {
-				// 		data[result.key].userName = result.val().username;
-				// 		data[result.key].selected = false;
-				// 	});
-				// 	dispatch({
-				// 		type: UPDATE_FRIENDSLIST,
-				// 		payload: data
-				// 	});
-				// });
       }
     );
   };

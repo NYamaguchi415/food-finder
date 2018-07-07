@@ -11,10 +11,9 @@ import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
 import FriendsScreen from './screens/FriendsScreen';
 import UserSearchScreen from './screens/UserSearchScreen';
+import FilterScreen from './screens/FilterScreen';
 import SwipeScreen from './screens/SwipeScreen';
 import ResultsScreen from './screens/ResultsScreen';
-import FilterScreen from './screens/FilterScreen';
-import YelpTestScreen from './screens/YelpTestScreen';
 import reducers from './src/reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
@@ -42,11 +41,13 @@ const AppNavigator = createSwitchNavigator({
   Main: createStackNavigator({
     Home: HomeScreen,
     Friends: FriendsScreen,
-    UserSearch: UserSearchScreen
-  }),
-  NewEvent: createStackNavigator({
-    EventFriends: FriendsScreen,
-    FoodFilters: FilterScreen
+    UserSearch: UserSearchScreen,
+    NewEvent: createStackNavigator({
+      EventFriends: FriendsScreen,
+      FoodFilters: FilterScreen,
+      Swipe: SwipeScreen,
+      Results: ResultsScreen
+    })
   })
 });
 

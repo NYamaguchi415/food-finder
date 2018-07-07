@@ -1,48 +1,45 @@
 import React, { Component } from 'react';
-import { View, FlatList, TouchableHighlight, Dimensions, Button, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableHighlight, Image,   Text, Dimensions, Button, StyleSheet, ListView } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import firebase from '../firebaseInit';
-
+import { connect } from 'react-redux';
+import { selectFilter, setRestaurantsAsGroupOwner } from '../src/actions/FilterActions';
 //const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class FilterScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    let data = [
+      { key: 'American'}, 
+      { key: 'Chinese' }, 
+      { key: 'Dessert' },
+      { key: 'Greek' }, 
+      { key: 'Halal' }, 
+      { key: 'Hamburgers' },
+      { key: 'Indian' }, 
+      { key: 'Italian' }, 
+      { key: 'Japanese' },
+      { key: 'Mexican' }, 
+      { key: 'Sandwiches' }, 
+      { key: 'Thai' },
+      { key: 'Ukranian' }, 
+      { key: 'Vegetarian', }      
+    ]
+
+    this.data = data;
+    this.dataSource = ds.cloneWithRows(data);
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.restaurantsSet) {
+        this.props.navigation.navigate('swipeScreen');
+    }
+  }
+
   static navigationOptions = {
     title: 'Filters',
   };
-
-
-  proceed() {
-    this.props.navigation.navigate('swipe');
-    const uId = firebase.auth().currentUser.uid;
-    firebase.database().ref('users').child(uId).once('value', snapshot => {
-      const eventId = snapshot.val().currentEvent_id;
-      firebase.database().ref('events').child(eventId).update(
-        { restaurants: {
-          restaurant_id_1: {
-            name: 'Essen',
-            no: 0,
-            yes: 0
-          },
-          restaurant_id_2: {
-            name: 'SweetGreen',
-            no: 0,
-            yes: 0
-          },
-          restaurant_id_3: {
-            name: 'Chipotle',
-            no: 0,
-            yes: 0
-          }
-        }, }
-      );
-    });
-    //const eventId = firebase.database().ref();
-    // const eventId = firebase.database().ref('events').push();
-    // eventId.set(newEvent, (val) => {
-    //   console.log('oncomplete');
-    //   console.log(val);
-    // });
-  }
 
   render() {
     return (
@@ -50,33 +47,57 @@ class FilterScreen extends Component {
         <View>
           <List>
             <FlatList
-              data={[{ key: 'American' }, { key: 'Chinese' }, { key: 'Dessert' },
-               { key: 'Greek' }, { key: 'Halal' }, { key: 'Hamburgers' },
-               { key: 'Indian' }, { key: 'Italian' }, { key: 'Japanese' },
-               { key: 'Mexican' }, { key: 'Sandwiches' }, { key: 'Thai' },
-               { key: 'Ukranian' }, { key: 'Vegetarian', }
-            ]}
+              extraData={this.props.filterList}
+              data={this.data}            
               renderItem={({ item }) =>
                 <ListItem
-                  title={item.key}
+                  onPress={this.props.selectFilter.bind(this, item.key)}
+                  title={<Text style={{color: this.props.filterList[item.key] ? 'black' : 'red'}}>{item.key}</Text>}
                   hideChevron
                 />
               }
-            />
+                /> 
           </List>
         </View>
         <Button
           title='Start Swiping'
-          onPress={this.proceed.bind(this)}
+          onPress={this.props.setRestaurantsAsGroupOwner.bind(this, this.props.filterList, this.props.auth)}
         />
+        <Text style={styles.errorTextStyle}>
+          {this.props.error}
+        </Text>
       </View>
     );
   }
 }
-
-export default FilterScreen;
+const mapStateToProps = (state) => {
+  const {auth, filters} = state;
+  return {auth, filterList: filters.filterList, restaurantsSet: filters.restaurantsSet, error: filters.error};
+}
+export default connect(mapStateToProps, {
+selectFilter, setRestaurantsAsGroupOwner
+})(FilterScreen);
 
 const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    backgroundColor: 'red',
+    opacity: 0.3
+  },
+  list: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+},
+item: {
+    // backgroundColor: '#CCC',
+    margin: 10,
+},
+errorTextStyle: {
+  fontSize: 20,
+  alignSelf: 'center',
+  color: 'red'
+},
   filterButtonStyle: {
     flex: 1,
     height: 50,

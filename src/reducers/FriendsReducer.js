@@ -26,12 +26,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state };
     case SELECT_FRIEND:
       const { selectedFriends } = state;
-      if (selectedFriends[action.payload]) {
-        delete selectedFriends[action.payload];
-      } else {
-        selectedFriends[action.payload] = true;
-      }
-      return { ...state, selectedFriends };
+      const friendsList = Object.assign({},state.friendsList);
+      const selected = friendsList[action.payload].selected;
+      friendsList[action.payload].selected = !selected;
+      return { ... state, friendsList}
     default:
       return state;
   }

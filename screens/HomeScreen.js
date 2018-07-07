@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, Button } from 'react-native';
-import { retrieveHomeEvents } from '../src/actions/HomeEventsActions';
+import { View, Button } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
+import { retrieveHomeEvents } from '../src/actions/HomeEventsActions';
 // import firebase from '../firebaseInit';
 
 class HomeScreen extends Component {
@@ -25,7 +25,6 @@ class HomeScreen extends Component {
   render() {
     return (
       <View>
-        <Text> Hello </Text>
         <List>
           {
             (Object.keys(this.props.events)).map((key) => (
@@ -39,7 +38,7 @@ class HomeScreen extends Component {
         </List>
         <Button
           title='Create New Event'
-          onPress={() => console.log(this.props.events)}
+          onPress={() => this.props.navigation.navigate('NewEvent')}
         />
       </View>
     );

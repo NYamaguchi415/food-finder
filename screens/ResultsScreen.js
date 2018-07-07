@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
     ActivityIndicator, StyleSheet, Button, Dimensions,
-    Keyboard, View, Text, TextInput, Image, TouchableOpacity
+    Keyboard, View, Text, TextInput, Image, TouchableOpacity, ScrollView
 } from 'react-native';
 
 import firebase from '../firebaseInit';
@@ -12,6 +12,19 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class ResultsScreen extends Component {
+
+    resetCurrentUser() {
+        const uId = firebase.auth().currentUser.uid;    
+        console.log(uId);
+        firebase.database().ref('users').child(uId)
+        .child('currentEvent_id')
+        .set('');
+    }
+
+    next() {
+        this.resetCurrentUser();
+        this.props.navigation.navigate('mainScreen');
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +35,6 @@ class ResultsScreen extends Component {
         firebase.database().ref('users').child(this.props.user.uid).once('value')
         .then((userSnapshot)=>{
             eventId = userSnapshot.val().currentEvent_id;
-            // this.setState({eventId});
             firebase.database().ref(`events/${eventId}/restaurants`).once('value')
             .then((snapshot)=>{
                 this.setState({
@@ -31,16 +43,11 @@ class ResultsScreen extends Component {
             })    
         })    
     }
-
-    //TODO: Remove user's currentEventId
-    componentWillUnmount() {
-
-    }
   
     render() {
         return(
             <View style={styles.mainViewStyle}>
-                <View style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
+                <ScrollView style={{ height:SCREEN_HEIGHT*0.85, width: SCREEN_WIDTH * 0.85 }}>                    
                     <View>
                     <Text>
                         Winners
@@ -51,6 +58,7 @@ class ResultsScreen extends Component {
                                 console.log(restaurant);
                                     return (
                                     <ResultRow 
+                                        key={restaurant.name}
                                         styles={styles}
                                         name={restaurant.name}                                    
                                         no={restaurant.no}
@@ -59,8 +67,9 @@ class ResultsScreen extends Component {
                             )
                         })
                     }
+                    <Button onPress={this.next.bind(this)} title={'go home'}></Button>
                     </View>
-                </View>
+                </ScrollView>
             </View>
         )
     }
@@ -73,6 +82,8 @@ const styles = StyleSheet.create({
     },
     mainViewStyle: {
         flex: 1,
+        paddingTop: 30,
+        paddingBottom: 30,        
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white'
