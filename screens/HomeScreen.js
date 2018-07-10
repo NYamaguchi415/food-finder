@@ -19,7 +19,6 @@ class HomeScreen extends Component {
 
   componentDidMount() {
     this.props.retrieveHomeEvents(this.props.user.uid);
-    console.log(this.props.user.uid);
   }
 
   render() {
@@ -31,14 +30,13 @@ class HomeScreen extends Component {
               <ListItem
                 title={this.props.events[key].name}
                 key={key}
-                // onPress={this.friendSelected.bind(this, key)}
               />
             ))
           }
         </List>
         <Button
           title='Create New Event'
-          onPress={() => this.props.navigation.navigate('NewEvent')}
+          onPress={() => this.props.navigation.navigate('EventFriends')}
         />
       </View>
     );

@@ -12,11 +12,23 @@ export const retrieveHomeEvents = (currentUserId) => {
     .on('value',
       (snapshot) => {
         const data = snapshot.val() || {};
-				console.log(data);
-        dispatch({
-          type: UPDATE_HOME_EVENTS,
-          payload: data
-        });
+				const eventIds = Object.keys(data);
+				const promises = eventIds.map(
+					eventId => firebase.database().ref(`events/${eventId}`).once('value')
+				);
+				Promise.all(promises).then(results => {
+					results.forEach(result => {
+						console.log(result.key);
+						console.log(result.val());
+						data[result.key].name = result.val().name;
+						data[result.key].createdTime = result.val().createdTime;
+						console.log(data);
+					});
+					dispatch({
+						type: UPDATE_HOME_EVENTS,
+						payload: data
+					});
+				});
       }
     );
   };

@@ -41,13 +41,13 @@ const AppNavigator = createSwitchNavigator({
   Main: createStackNavigator({
     Home: HomeScreen,
     Friends: FriendsScreen,
-    UserSearch: UserSearchScreen,
-    NewEvent: createStackNavigator({
-      EventFriends: FriendsScreen,
-      FoodFilters: FilterScreen,
-      Swipe: SwipeScreen,
-      Results: ResultsScreen
-    })
+    UserSearch: UserSearchScreen
+  }),
+  NewEvent: createStackNavigator({
+    EventFriends: FriendsScreen,
+    FoodFilters: FilterScreen,
+    Swipe: SwipeScreen,
+    Results: ResultsScreen
   })
 });
 

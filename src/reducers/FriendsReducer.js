@@ -24,12 +24,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, friendsList: action.payload };
     case ADD_FRIEND:
       return { ...state };
-    case SELECT_FRIEND:
-      const { selectedFriends } = state;
-      const friendsList = Object.assign({},state.friendsList);
+    case SELECT_FRIEND: {
+      const friendsList = Object.assign({}, state.friendsList);
       const selected = friendsList[action.payload].selected;
       friendsList[action.payload].selected = !selected;
-      return { ... state, friendsList}
+      return { ...state, friendsList };
+    }
     default:
       return state;
   }
