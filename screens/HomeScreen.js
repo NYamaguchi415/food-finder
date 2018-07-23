@@ -28,6 +28,7 @@ class HomeScreen extends Component {
           {
             (Object.keys(this.props.events)).map((key) => (
               <ListItem
+                onPress={()=>this.props.navigation.navigate('EventDetail')}
                 title={this.props.events[key].name}
                 key={key}
               />

@@ -11,6 +11,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
 import HomeFriendsScreen from './screens/HomeFriendsScreen';
 import EventFriendsScreen from './screens/EventFriendsScreen';
+import EventDetailScreen from './screens/EventDetailScreen';
 import UserSearchScreen from './screens/UserSearchScreen';
 import FilterScreen from './screens/FilterScreen';
 import SwipeScreen from './screens/SwipeScreen';
@@ -46,6 +47,7 @@ const AppNavigator = createSwitchNavigator({
   }),
   NewEvent: createStackNavigator({
     EventFriends: EventFriendsScreen,
+    EventDetail: EventDetailScreen,
     FoodFilters: FilterScreen,
     Swipe: SwipeScreen,
     Results: ResultsScreen
