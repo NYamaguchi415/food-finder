@@ -7,40 +7,30 @@ import { retrieveFriendsList, selectFriend } from '../src/actions/FriendsActions
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-class FriendsScreen extends Component {
+class EventFriendsScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Food-Finder',
-    headerRight: (
+    headerLeft: (
       <Button
-        title='+'
-        color='blue'
-        onPress={() => navigation.navigate('userSearchScreen')}
+        title='Cancel'
+        color='black'
+        onPress={() => navigation.navigate('Home')}
       />
     )
   })
 
   componentDidMount() {
-    // Check whether user has a current Event to send them to an Event if they have
-    firebase.database().ref('users').child(this.props.user.uid).once('value')
-    .then((userSnapshot) => {
-        const eventId = userSnapshot.val().currentEvent_id;
-        if (eventId) {
-              this.props.navigation.navigate('swipe');
-        }
-      }
-    );
-
     this.props.retrieveFriendsList(this.props.user.uid);
   }
 
-  // userIdMapper() {
-  //   const userIds = {};
-  //   const selectedFriends = this.state.friends.filter(friend => friend.selected === true);
-  //   selectedFriends.forEach((userId) => {
-  //     userIds[userId.key] = 0;
-  //   });
-  //   return userIds;
-  // }
+  userIdMapper() {
+    const userIds = {};
+    const selectedFriends = this.state.friends.filter(friend => friend.selected === true);
+    selectedFriends.forEach((userId) => {
+      userIds[userId.key] = 0;
+    });
+    return userIds;
+  }
 
   friendSelected(friendUserId) {
     this.props.selectFriend(friendUserId);
@@ -51,6 +41,7 @@ class FriendsScreen extends Component {
     users[this.props.user.uid] = true;
     const newEvent = {
       createdTime: new Date(),
+      name: 'Lunch!',
       match: 0,
       users
     };
@@ -58,15 +49,15 @@ class FriendsScreen extends Component {
     const eventId = firebase.database().ref('events').push();
     eventId.set(newEvent);
 
-    // Sets the created event id on every user involved as a currentEvent_id
-    // COMMENTING THIS OUT FOR NOW FOR TESTING
+    //
     Object.keys(users).forEach((userId) => {
       firebase.database().ref('users')
       .child(userId)
-      .child('currentEvent_id')
-      .set(eventId.key);
+      .child('events')
+      .child(eventId.key)
+      .set({ complete: false });
     });
-    this.props.navigation.navigate('filterScreen');
+    this.props.navigation.navigate('FoodFilters');
   }
 
   render() {
@@ -112,4 +103,4 @@ const mapStateToProps = ({ auth, friends }) => {
 
 export default connect(mapStateToProps, {
   retrieveFriendsList, selectFriend
-})(FriendsScreen);
+})(EventFriendsScreen);

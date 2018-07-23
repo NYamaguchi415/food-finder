@@ -13,8 +13,10 @@ export const FRIEND_ADD = 'friend_add';
 
 export const SELECT_FRIEND = 'select_friend';
 
+export const UPDATE_HOME_EVENTS = 'update_home_events';
+
 export const FILTER_SELECTED = 'filter_selected';
-export const FILTERS_FINALIZED = 'FILTERS_FINALIZED'
+export const FILTERS_FINALIZED = 'FILTERS_FINALIZED';
 export const SET_RESTAURANTS_AS_OWNER = 'SET_RESTAURANTS_AS_OWNER';
 export const SET_RESTAURANTS_AS_OWNER_FAILURE = 'SET_RESTAURANTS_AS_OWNER_FAILURE';
 
@@ -33,6 +35,6 @@ export const GET_RESTAURANTS = 'get_restaurants';
 export const GET_RESTAURANTS_FAIL = 'get_restaurants_fail';
 export const SET_EVENT_ID = 'set_event_id';
 
-export const SET_ACTIVE_RESTAURANT= 'set_active_restaurant';
+export const SET_ACTIVE_RESTAURANT = 'set_active_restaurant';
 export const INDEX_UP = 'index_up';
 export const SET_USERS = 'set_users';

@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 
-class WelcomeScreen extends Component {
+class TitleScreen extends Component {
   componentWillMount() {
     // this.props.navigation.navigate('userSearchScreen');
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('authStack')}>
+      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Auth')}>
         <View style={styles.mainViewStyle}>
           <Text style={styles.titleTextStyle}>
             Food Finder
@@ -24,7 +24,7 @@ function mapStateToProps({ auth }) {
   return { user: auth.user };
 }
 
-export default connect(mapStateToProps)(WelcomeScreen);
+export default connect(mapStateToProps)(TitleScreen);
 
 const styles = StyleSheet.create({
   mainViewStyle: {

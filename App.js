@@ -2,74 +2,59 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { StyleSheet, View } from 'react-native';
-import { TabNavigator, StackNavigator } from 'react-navigation';
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import ReduxThunk from 'redux-thunk';
 
-import WelcomeScreen from './screens/WelcomeScreen';
-import AuthScreen from './screens/AuthScreen';
+import TitleScreen from './screens/TitleScreen';
+import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import FriendsScreen from './screens/FriendsScreen';
+import HomeScreen from './screens/HomeScreen';
+import HomeFriendsScreen from './screens/HomeFriendsScreen';
+import EventFriendsScreen from './screens/EventFriendsScreen';
 import UserSearchScreen from './screens/UserSearchScreen';
-import SwipeScreen from './screens/SwipeScreen';
-import TestSwipeScreen from './screens/TestSwipeScreen';
-
-import ResultsScreen from './screens/ResultsScreen';
 import FilterScreen from './screens/FilterScreen';
-import YelpTestScreen from './screens/YelpTestScreen';
+import SwipeScreen from './screens/SwipeScreen';
+import ResultsScreen from './screens/ResultsScreen';
 import reducers from './src/reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
 
 export default class App extends Component {
   render() {
-    const MainNavigator =
-    TabNavigator({
-        welcome: { screen: WelcomeScreen },
-        
-        authStack: {
-          screen: StackNavigator({
-              auth: { screen: AuthScreen },
-              signup: { screen: SignUpScreen }
-          })
-        },
-        // swipe: { screen: SwipeScreen },
-        // results: { screen: ResultsScreen },
-        swipe: { screen: TestSwipeScreen },
-        results: { screen: ResultsScreen }, 
-        main: {
-          screen: TabNavigator({
-            friendsStack: {
-              screen: StackNavigator({
-                friendsScreen: { screen: FriendsScreen },
-                userSearchScreen: { screen: UserSearchScreen }
-              })
-            },
-            filterScreen: { screen: FilterScreen },
-            yelpScreen: { screen: YelpTestScreen }
-          })
-        }
-      }, {
-        navigationOptions: {
-          tabBarVisible: false
-        },
-        lazy: true
-    })
-    ;
     return (
       <Provider store={store}>
         <View style={styles.container}>
-          <MainNavigator />
+          <AppNavigator />
         </View>
       </Provider>
     );
   }
 }
 
+const AuthStackNavigator = createStackNavigator({
+  Login: LoginScreen,
+  SignUp: SignUpScreen
+});
+
+const AppNavigator = createSwitchNavigator({
+  Title: TitleScreen,
+  Auth: AuthStackNavigator,
+  Main: createStackNavigator({
+    Home: HomeScreen,
+    Friends: HomeFriendsScreen,
+    UserSearch: UserSearchScreen
+  }),
+  NewEvent: createStackNavigator({
+    EventFriends: EventFriendsScreen,
+    FoodFilters: FilterScreen,
+    Swipe: SwipeScreen,
+    Results: ResultsScreen
+  })
+});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'//,
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    backgroundColor: '#fff'
   },
 });

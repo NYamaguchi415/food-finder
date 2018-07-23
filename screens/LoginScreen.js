@@ -6,14 +6,14 @@ import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLog
 import { authScreenStyles as styles } from './styles/Styles';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class AuthScreen extends Component {
+class LoginScreen extends Component {
   componentWillReceiveProps(newProps) {
     this.onAuthComplete(newProps);
   }
 
   onAuthComplete(props) {
     if (props.user) {
-      this.props.navigation.navigate('friendsStack');
+      this.props.navigation.navigate('Main');
       Keyboard.dismiss();
     }
   }
@@ -80,7 +80,7 @@ class AuthScreen extends Component {
               <Button
                 title='Sign Up'
                 style={styles.signInButtonStyle}
-                onPress={() => this.props.navigation.navigate('signup')}
+                onPress={() => this.props.navigation.navigate('SignUp')}
               />
             </View>
           </View>
@@ -96,4 +96,4 @@ const mapStateToProps = ({ auth }) => {
 
 export default connect(mapStateToProps, {
   emailChanged, passwordChanged, loginUser
-})(AuthScreen);
+})(LoginScreen);
