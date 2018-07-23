@@ -9,7 +9,8 @@ import TitleScreen from './screens/TitleScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
-import FriendsScreen from './screens/FriendsScreen';
+import HomeFriendsScreen from './screens/HomeFriendsScreen';
+import EventFriendsScreen from './screens/EventFriendsScreen';
 import UserSearchScreen from './screens/UserSearchScreen';
 import FilterScreen from './screens/FilterScreen';
 import SwipeScreen from './screens/SwipeScreen';
@@ -40,11 +41,11 @@ const AppNavigator = createSwitchNavigator({
   Auth: AuthStackNavigator,
   Main: createStackNavigator({
     Home: HomeScreen,
-    Friends: FriendsScreen,
+    Friends: HomeFriendsScreen,
     UserSearch: UserSearchScreen
   }),
   NewEvent: createStackNavigator({
-    EventFriends: FriendsScreen,
+    EventFriends: EventFriendsScreen,
     FoodFilters: FilterScreen,
     Swipe: SwipeScreen,
     Results: ResultsScreen

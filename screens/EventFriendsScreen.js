@@ -7,14 +7,14 @@ import { retrieveFriendsList, selectFriend } from '../src/actions/FriendsActions
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-class FriendsScreen extends Component {
+class EventFriendsScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Food-Finder',
-    headerRight: (
+    headerLeft: (
       <Button
-        title='+'
-        color='blue'
-        onPress={() => navigation.navigate('UserSearch')}
+        title='Cancel'
+        color='black'
+        onPress={() => navigation.navigate('Home')}
       />
     )
   })
@@ -103,4 +103,4 @@ const mapStateToProps = ({ auth, friends }) => {
 
 export default connect(mapStateToProps, {
   retrieveFriendsList, selectFriend
-})(FriendsScreen);
+})(EventFriendsScreen);
