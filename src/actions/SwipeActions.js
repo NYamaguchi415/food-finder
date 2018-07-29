@@ -40,33 +40,29 @@ export const matchOccured = (dispatch, snapshot) => {
     }
 }
 
-export const getRestaurants = (uId) => {
+export const getRestaurants = (uId, eventId) => {
     return dispatch => {    
-        firebase.database().ref('users').child(uId).once('value')
-        .then((userSnapshot)=>{
-            const eventId = userSnapshot.val().currentEvent_id;
-            firebase.database().ref(`events/${eventId}/match`).on('value', (snapshot)=>{matchOccured(dispatch, snapshot)});
-            dispatch({ type: SET_EVENT_ID, payload: eventId});
-            firebase.database().ref('events').once('value')
-            .then((eventSnapshot)=> {                
-                const event = eventSnapshot.child(eventId).val();
+        firebase.database().ref(`events/${eventId}/match`).on('value', (snapshot)=>{matchOccured(dispatch, snapshot)});
+        dispatch({ type: SET_EVENT_ID, payload: eventId});
+        firebase.database().ref('events').once('value')
+        .then((eventSnapshot)=> {                
+            const event = eventSnapshot.child(eventId).val();
 
-                
-                const users = event.users;
-                const restaurants = event.restaurants;
-                const activeRestaurantKey = Object.keys(restaurants)[0];
-                const activeRestaurant = restaurants[activeRestaurantKey];
-                const payload = {
-                    restaurants,
-                    index: 0,
-                    activeRestaurant                    
-                }
-                dispatch({type: INDEX_UP, payload: 0});                
-                dispatch({type: SET_USERS, payload: users});                
-                dispatch({type: GET_RESTAURANTS, payload: restaurants})
-                dispatch({type: SET_ACTIVE_RESTAURANT, payload: activeRestaurant})
-            })        
-        })
+            
+            const users = event.users;
+            const restaurants = event.restaurants;
+            const activeRestaurantKey = Object.keys(restaurants)[0];
+            const activeRestaurant = restaurants[activeRestaurantKey];
+            const payload = {
+                restaurants,
+                index: 0,
+                activeRestaurant                    
+            }
+            dispatch({type: INDEX_UP, payload: 0});                
+            dispatch({type: SET_USERS, payload: users});                
+            dispatch({type: GET_RESTAURANTS, payload: restaurants})
+            dispatch({type: SET_ACTIVE_RESTAURANT, payload: activeRestaurant})
+        })        
     }
 }
 

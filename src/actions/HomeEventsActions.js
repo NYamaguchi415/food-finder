@@ -1,7 +1,10 @@
 import firebase from '../../firebaseInit';
 
 import {
-	UPDATE_HOME_EVENTS
+	UPDATE_HOME_EVENTS,
+	CREATE_EVENT_DRAFT,
+	SELECT_EVENT,
+	UNSELECT_EVENT
 } from './types';
 
 export const retrieveHomeEvents = (currentUserId) => {
@@ -33,3 +36,28 @@ export const retrieveHomeEvents = (currentUserId) => {
     );
   };
 };
+
+export const createEvent = () => {
+	return dispatch => {
+		const newEvent = {
+			createdTime: firebase.database.ServerValue.TIMESTAMP,
+			name: 'Lunch!',
+			match: 0,
+			status: 'DRAFT'
+		};
+		// Creates a new event in db when user proceeds to filter screen
+		const eventId = firebase.database().ref('events').push()
+		eventId.set(newEvent).then(()=>{
+			newEvent.id = eventId.key;
+			dispatch({type:CREATE_EVENT_DRAFT, payload: newEvent})
+		})
+	}
+}
+
+export const selectEvent = (eventId) => {
+	return { type: SELECT_EVENT, payload: eventId}
+}
+
+export const unselectEvent = () => {
+	return {type: UNSELECT_EVENT }
+}

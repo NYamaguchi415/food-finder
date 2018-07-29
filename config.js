@@ -1,10 +1,10 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyD_7ztRhWc5bMCZg0p3KTAOikttUKAOrCc",
-  authDomain: "food-finder-c4fc4.firebaseapp.com",
-  databaseURL: "https://food-finder-c4fc4.firebaseio.com",
-  projectId: "food-finder-c4fc4",
-  storageBucket: "",
-  messagingSenderId: "29113191830"
+  apiKey: "AIzaSyDUyBJqzRsZy1v9A633-puY_JwKmkvK9-4",
+  authDomain: "ghost-310f1.firebaseapp.com",
+  databaseURL: "https://ghost-310f1.firebaseio.com",
+  projectId: "ghost-310f1",
+  storageBucket: "ghost-310f1.appspot.com",
+  messagingSenderId: "219426193377"
 };
 
-export const yelpAPIKey = 'xxxxxxxxxxxxxxxxxx';
+export const yelpAPIKey = 'KjzzMyYxAg1AoLmyKtpKVmEP2zh4xkG2IhsV92FN3no3rWY7y0t5US15UDpgprc8tjnX1I8c_aAxtmIHGTiQcVpFKTgMvx0QrZwnbuWFj_PBThxc6rc0q2tAFWaZWnYx';

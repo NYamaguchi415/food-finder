@@ -13,6 +13,9 @@ export const FRIEND_ADD = 'friend_add';
 export const SELECT_FRIEND = 'select_friend';
 
 export const UPDATE_HOME_EVENTS = 'update_home_events';
+export const CREATE_EVENT_DRAFT = 'create_event_draft';
+export const UNSELECT_EVENT = 'unselect_event';
+export const SELECT_EVENT = 'select_event';
 
 export const FILTER_SELECTED = 'filter_selected';
 export const FILTERS_FINALIZED = 'FILTERS_FINALIZED';

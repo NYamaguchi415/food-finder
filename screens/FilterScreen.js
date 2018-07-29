@@ -33,7 +33,7 @@ class FilterScreen extends Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.restaurantsSet) {
-        this.props.navigation.navigate('swipeScreen');
+        this.props.navigation.navigate('Swipe');
     }
   }
 
@@ -61,7 +61,7 @@ class FilterScreen extends Component {
         </View>
         <Button
           title='Start Swiping'
-          onPress={this.props.setRestaurantsAsGroupOwner.bind(this, this.props.filterList, this.props.auth)}
+          onPress={this.props.setRestaurantsAsGroupOwner.bind(this, this.props.filterList, this.props.auth, this.props.home)}
         />
         <Text style={styles.errorTextStyle}>
           {this.props.error}
@@ -71,8 +71,8 @@ class FilterScreen extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  const {auth, filters} = state;
-  return {auth, filterList: filters.filterList, restaurantsSet: filters.restaurantsSet, error: filters.error};
+  const {auth, filters, home} = state;
+  return {auth, filterList: filters.filterList, restaurantsSet: filters.restaurantsSet, error: filters.error, home};
 }
 export default connect(mapStateToProps, {
 selectFilter, setRestaurantsAsGroupOwner

@@ -16,7 +16,7 @@ export const selectFilter = (filter) => {
 	};    
 }
 
-export const setRestaurantsAsGroupOwner = (filters, auth) => {
+export const setRestaurantsAsGroupOwner = (filters, auth, home) => {
   return (dispatch) => {
     dispatch({type: FILTERS_FINALIZED});
     console.log(filters);
@@ -25,7 +25,7 @@ export const setRestaurantsAsGroupOwner = (filters, auth) => {
     const url = buildUrlFromCategories(categories);  
     const options = {headers: {authorization: `Bearer ${yelpAPIKey}`}};
     axios.get(url, options)
-    .then(response=>proceed(dispatch, response, auth))
+    .then(response=>proceed(dispatch, response, auth, home))
     .catch((e)=>{
       dispatch({type: FILTERS_FINALIZED});
     })
@@ -37,26 +37,29 @@ getRestaurants = () => {
   return axios.get(url, options);
 }
 
-proceed = (dispatch, response, auth) => {
+proceed = (dispatch, response, auth, home) => {
   let businesses = response.data && response.data.businesses;    
   const uId = auth.user.uid; 
-  firebase.database().ref('users').child(uId).once('value', snapshot => {
-    const eventId = snapshot.val().currentEvent_id;
-    let restaurants = {};
-    businesses.forEach((r)=>{
-      // const key = r.name.replace(/[\.\#\$\[\]\/]/g, "");
-      const key = r.id;
-      restaurants[key] = {
-          name: r.name, no: 0, yes: 0, id: r.id
-        }
-      });
-      firebase.database().ref('events').child(eventId).update(
-        {restaurants: restaurants}
-      ).then(()=>{
-        dispatch({type: SET_RESTAURANTS_AS_OWNER});
-      })
-  })
+  const eventId = home.currentEvent.id;
+  const restaurants = {};
+  businesses.forEach((r)=>{
+    const key = r.id;
+    restaurants[key] = {
+        name: r.name, 
+        no: 0,
+        yes: 0, 
+        id: r.id
+      }
+  });
   
+  const updates = {}
+  updates['events/' + eventId + '/restaurants'] = restaurants;
+  updates['events/' + eventId + '/status'] = 'STARTED';
+  updates['users/' + uId + '/events/' + eventId + '/status'] = 'STARTED';
+  firebase.database().ref().update(updates)
+    .then(()=>{
+      dispatch({type: SET_RESTAURANTS_AS_OWNER});
+    })  
 }
 
 buildUrlFromCategories= (categories) => {

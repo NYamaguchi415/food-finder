@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
+import { unselectEvent } from '../src/actions/HomeEventsActions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -13,12 +14,21 @@ class EventDetailScreen extends Component {
       <Button
         title='Cancel'
         color='black'
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => { navigation.navigate('Home');
+          navigation.state.params.unselect();
+         } }
       />
     )
   })
 
+  navigateHome(navigation) {
+    this.props.unselectEvent();
+    navigation.navigate('Home')
+  }
+
   componentDidMount() {
+    this.props.navigation.setParams({unselect: this.props.unselectEvent.bind(this)});
+    
     // this.props.retrieveFriendsList(this.props.user.uid);
   }
 
@@ -48,4 +58,5 @@ const mapStateToProps = ({ auth, friends }) => {
 };
 
 export default connect(mapStateToProps, {
+  unselectEvent
 })(EventDetailScreen);

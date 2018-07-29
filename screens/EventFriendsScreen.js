@@ -4,6 +4,7 @@ import { View, Text, Button, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 import firebase from '../firebaseInit';
 import { retrieveFriendsList, selectFriend } from '../src/actions/FriendsActions';
+import { unselectEvent } from '../src/actions/HomeEventsActions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -14,12 +15,19 @@ class EventFriendsScreen extends Component {
       <Button
         title='Cancel'
         color='black'
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => { navigation.navigate('Home');
+          navigation.state.params.unselect();
+         } }
       />
     )
   })
 
+  navigateHome(navigation) {
+    this.props.unselectEvent();
+    navigation.navigate('Home')
+  }
   componentDidMount() {
+    this.props.navigation.setParams({unselect: this.props.unselectEvent.bind(this)});
     this.props.retrieveFriendsList(this.props.user.uid);
   }
 
@@ -38,26 +46,20 @@ class EventFriendsScreen extends Component {
 
   proceed() {
     const users = this.props.selectedFriends;
-    users[this.props.user.uid] = true;
-    const newEvent = {
-      createdTime: new Date(),
-      name: 'Lunch!',
-      match: 0,
-      users
-    };
-    // Creates a new event in db when user proceeds to filter screen
-    const eventId = firebase.database().ref('events').push();
-    eventId.set(newEvent);
-
-    //
+    // const eventKey = this.props.currentEvent;
+    const eventKey = this.props.currentEvent.id;
+    let updates = {};
     Object.keys(users).forEach((userId) => {
-      firebase.database().ref('users')
-      .child(userId)
-      .child('events')
-      .child(eventId.key)
-      .set({ complete: false });
-    });
-    this.props.navigation.navigate('FoodFilters');
+      updates['/events/' + eventKey + '/users/' + userId + '/status'] = 'PENDING';
+      updates['/users/' + userId + '/events/' + eventKey + '/status'] = 'DRAFT';
+    })
+    updates['/events/' + eventKey + '/users/' + this.props.user.uid + '/status'] = 'ACCEPTED';
+    updates['/users/' + this.props.user.uid + '/events/' + eventKey + '/status'] = 'DRAFT';
+    
+    firebase.database().ref().update(updates)
+    .then(()=> {
+      this.props.navigation.navigate('FoodFilters');      
+    })
   }
 
   render() {
@@ -78,7 +80,7 @@ class EventFriendsScreen extends Component {
                     style: {
                       marginRight: 10,
                       fontSize: 15,
-                      color: (this.props.selectedFriends[key]) ? 'green' : 'white'
+                      color: (this.props.selectedFriends[key] && this.props.selectedFriends[key].selected) ? 'green' : 'white'
                     }
                   }}
                 />
@@ -95,12 +97,13 @@ class EventFriendsScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, friends }) => {
+const mapStateToProps = ({ auth, friends, home }) => {
+  const { currentEvent } = home;
   const { user } = auth;
   const { friendsList, selectedFriends } = friends;
-  return { user, friendsList, selectedFriends };
+  return { user, friendsList, selectedFriends, currentEvent };
 };
 
 export default connect(mapStateToProps, {
-  retrieveFriendsList, selectFriend
+  retrieveFriendsList, selectFriend, unselectEvent
 })(EventFriendsScreen);
