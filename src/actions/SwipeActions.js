@@ -1,5 +1,6 @@
 import {yelpAPIKey} from '../../config';
 import firebase from '../../firebaseInit';
+
 import {
     RESTAURANT_SWIPE_YES,
     RESTAURANT_SWIPE_YES_SUCCESS,
@@ -13,7 +14,8 @@ import {
     INDEX_UP,
     SET_USERS,
     OUT_OF_MATCHES,
-    MATCH_OCCURED
+    MATCH_OCCURED,
+    UPDATE_TIME
 } from './types';
 
 export const getRestaurant = (keyName) => {
@@ -21,9 +23,6 @@ export const getRestaurant = (keyName) => {
     const options = {headers: {authorization: `Bearer ${yelpAPIKey}`}};
     axios.get(url, options).then((response)=>{
       let business = response.data;
-      console.log('active place', business);
-
-    //   dispatch({type: GET_RESTAURANTS, payload: })
       this.setState({
         restaurant: {
             picture: business.image_url,
@@ -76,6 +75,9 @@ export const restaurantSwipeNo = (index, restaurants, event, restaurant, users) 
         dispatch({type: RESTAURANT_SWIPE_NO});
         dispatch({type: INDEX_UP, payload: index});
         const restaurantKey = restaurant.id;
+        const updates = {};
+        updates[`events/${event}/restaurants/${restaurantKey}/no`] = 
+
         firebase.database().ref(`events/${event}/restaurants/${restaurantKey}/no`)
         .transaction((votes)=>{
             return votes + 1;
@@ -140,4 +142,14 @@ export const setRestaurant = (restaurant) => {
         type: SET_ACTIVE_RESTAURANT,
         payload: restaurant
     })
+}
+export const updateTime = (eventTime) => {
+    // const currentTime = firebase.database.ServerValue;
+    const currentTime = new Date().getTime();
+    const difference = (eventTime - currentTime) / 1000;
+
+    return {
+        type: UPDATE_TIME,
+        payload: difference
+    }
 }

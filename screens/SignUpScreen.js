@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, Button, Dimensions,
   Keyboard, View, TextInput } from 'react-native';
 import { emailChanged,
   passwordChanged,
+  confirmationPasswordChanged,
   usernameChanged,
   loginUser,
   signupUser } from '../src/actions/UserLoginActions';
@@ -11,14 +12,6 @@ import { emailChanged,
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class SignUpScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      confirmationPass: ''
-    };
-  }
-
   componentWillReceiveProps(newProps) {
     this.onAuthComplete(newProps);
   }
@@ -42,7 +35,7 @@ class SignUpScreen extends Component {
   }
 
   checkPasswords() {
-    if (this.props.password === this.state.confirmationPass) {
+    if (this.props.password === this.props.confirmationPasswordChanged) {
       return true;
     }
   }
@@ -130,10 +123,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, username, error, loading, user } = auth;
-  return { email, password, username, error, loading, user };
+  const { email, password, confirmationPassword, username, error, loading, user } = auth;
+  return { email, password, confirmationPassword, username, error, loading, user };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, usernameChanged, loginUser, signupUser
+  emailChanged, passwordChanged, confirmationPasswordChanged, usernameChanged, loginUser, signupUser
 })(SignUpScreen);

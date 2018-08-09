@@ -39,12 +39,17 @@ export const retrieveHomeEvents = (currentUserId) => {
 
 export const createEvent = () => {
 	return dispatch => {
+
+		const startTime = new Date();
+		startTime.setHours(19, 30);
 		const newEvent = {
 			createdTime: firebase.database.ServerValue.TIMESTAMP,
+			startTime: startTime.getTime(),
 			name: 'Lunch!',
 			match: 0,
 			status: 'DRAFT'
 		};
+
 		// Creates a new event in db when user proceeds to filter screen
 		const eventId = firebase.database().ref('events').push()
 		eventId.set(newEvent).then(()=>{

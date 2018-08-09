@@ -11,12 +11,14 @@ import {
     SET_ACTIVE_RESTAURANT,
     INDEX_UP,
     SET_USERS,
-    OUT_OF_MATCHES
+    OUT_OF_MATCHES,
+    UPDATE_TIME
 } from '../actions/types';
 
 const INITIAL_STATE = {
     restaurants: [],
     users: [],
+    time: null,
     eventId: null,
     index: null,   
     matchOccured: undefined,    
@@ -48,6 +50,8 @@ export default (state = INITIAL_STATE, action) => {
         case MATCH_OCCURED:
         case RESTAURANT_MATCH:
             return {...state, matchOccured: true}
+        case UPDATE_TIME:
+            return {...state, time: action.payload}
         default:
 			return state;
 	}

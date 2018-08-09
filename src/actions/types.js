@@ -1,5 +1,7 @@
 export const EMAIL_CHANGED = 'email_changed';
 export const PASSWORD_CHANGED = 'password_changed';
+export const CONFIRMATION_PASSWORD_CHANGED = 'confirmation_password_changed';
+
 export const USERNAME_CHANGED = 'username_changed';
 export const LOGIN_USER_SUCCESS = 'login_user_success';
 export const LOGIN_USER_FAIL = 'login_user_fail';
@@ -39,3 +41,4 @@ export const SET_EVENT_ID = 'set_event_id';
 export const SET_ACTIVE_RESTAURANT = 'set_active_restaurant';
 export const INDEX_UP = 'index_up';
 export const SET_USERS = 'set_users';
+export const UPDATE_TIME = 'update_time'

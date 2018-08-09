@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import SwipeCards from 'react-native-swipe-cards';
 import firebase from '../firebaseInit';
-import {getRestaurants, restaurantSwipeYes, restaurantSwipeNo} from '../src/actions/SwipeActions'
+import {getRestaurants, restaurantSwipeYes, restaurantSwipeNo, updateTime} from '../src/actions/SwipeActions'
 import ActivePlace from './components/ActivePlace';
 import InactivePlace from './components/InactivePlace';
 
@@ -15,6 +15,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class SwipeScreen extends Component {
     componentWillMount() {
+        setInterval(()=>this.props.updateTime(this.props.home.currentEvent.startTime), 1000);
         let uid = this.props.user.uid;
         let eventId = this.props.home.currentEvent.id;
         this.props.getRestaurants(uid, eventId);        
@@ -170,11 +171,10 @@ const mapStateToProps = ({auth, swipe, home}) => {
         index,
         outOfMatches, 
         matchOccured,
+        time,
         users } = swipe;
     const restaurantList = Object.values(restaurants).slice(index) || [];
-    const time = 120;
     const outOfTime = false;
-    console.log(swipe);
     return { user: auth.user, home,
         time, outOfTime, 
         outOfMatches, matchOccured, 
@@ -183,6 +183,7 @@ const mapStateToProps = ({auth, swipe, home}) => {
 
 export default connect(mapStateToProps, {
     getRestaurants,
+    updateTime,
     restaurantSwipeYes,
     restaurantSwipeNo
 })(SwipeScreen);
