@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, Button, Dimensions } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
+//import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { retrieveFriendsList } from '../src/actions/FriendsActions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -10,14 +11,19 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 class HomeFriendsScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Food-Finder',
-    headerLeft: <Icon name={'chevron-left'} size={15} onPress={() => { navigation.goBack(); }} />,
-    headerRight: (
-      <Button
-        title='+'
-        color='blue'
-        onPress={() => navigation.navigate('UserSearch')}
+    headerLeft:
+      <Icon
+      name={'ios-arrow-back'}
+      size={30}
+      onPress={() => { navigation.goBack(); }}
+      />,
+    headerRight:
+      <Icon
+      name={'md-person-add'}
+      size={30}
+      color='gray'
+      onPress={() => navigation.navigate('UserSearch')}
       />
-    )
   })
 
   componentDidMount() {

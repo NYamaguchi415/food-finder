@@ -41,7 +41,7 @@ const AppNavigator = createSwitchNavigator({
   Auth: AuthStackNavigator,
   Main: createStackNavigator({
     Home: HomeScreen,
-    Friends: HomeFriendsScreen,
+    HomeFriends: HomeFriendsScreen,
     UserSearch: UserSearchScreen
   }),
   NewEvent: createStackNavigator({

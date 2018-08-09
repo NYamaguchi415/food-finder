@@ -62,8 +62,10 @@ export const retrieveFriendsList = (currentUserId) => {
 				// retrieve friends' usernames by using uids
 				Promise.all(promises).then(results => {
 					results.forEach(result => {
-						data[result.key].userName = result.val().username;
-						data[result.key].selected = false;
+						if (result.key !== currentUserId) {
+							data[result.key].userName = result.val().username;
+							data[result.key].selected = false;
+						}
 					});
 					dispatch({
 						type: UPDATE_FRIENDSLIST,

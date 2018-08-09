@@ -18,11 +18,8 @@ export const retrieveHomeEvents = (currentUserId) => {
 				);
 				Promise.all(promises).then(results => {
 					results.forEach(result => {
-						console.log(result.key);
-						console.log(result.val());
 						data[result.key].name = result.val().name;
 						data[result.key].createdTime = result.val().createdTime;
-						console.log(data);
 					});
 					dispatch({
 						type: UPDATE_HOME_EVENTS,

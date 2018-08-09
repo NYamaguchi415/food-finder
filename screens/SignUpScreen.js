@@ -11,6 +11,10 @@ import { emailChanged,
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class SignUpScreen extends Component {
+  static navigationOptions = {
+    headerMode: 'none'
+  };
+
   constructor(props) {
     super(props);
 

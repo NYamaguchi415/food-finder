@@ -7,6 +7,10 @@ import { emailChanged, passwordChanged, loginUser } from '../src/actions/UserLog
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class LoginScreen extends Component {
+  static navigationOptions = {
+    headerMode: 'none'
+  };
+
   componentWillReceiveProps(newProps) {
     this.onAuthComplete(newProps);
   }

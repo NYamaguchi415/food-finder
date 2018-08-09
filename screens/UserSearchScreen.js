@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { SearchBar, List, ListItem } from 'react-native-elements';
+import { SearchBar, List, ListItem, Button } from 'react-native-elements';
 import {
   userSearchChanged,
   userSearchItemSelected,
@@ -53,17 +53,35 @@ class UserSearchScreen extends Component {
 
   friendAdd = (selectedUserId) => {
     // Function to add user as friend
+
+    // Set selected user id as a friend in current user's data
     firebase.database().ref(`users/${this.props.user.uid}/friends`)
     .child(selectedUserId)
     .set({
-      accepted: true
+      // This needs to be changed eventually
+      status: 'accepted'
+    });
+
+    // Set current user's id as a friend in selected user's data
+    firebase.database().ref(`users/${selectedUserId}/friends`)
+    .child(`${this.props.user.uid}`)
+    .set({
+      // This needs to be changed eventually
+      status: 'accepted'
     });
   };
 
   friendRemove = (selectedUserId) => {
     // Function to remove user from friends
+
+    // Remove selected user id as a friend in current user's data
     firebase.database().ref(`users/${this.props.user.uid}/friends`)
     .child(selectedUserId)
+    .set(null);
+
+    // Remove current user's id as a friend in selected user's data
+    firebase.database().ref(`users/${selectedUserId}/friends`)
+    .child(`${this.props.user.uid}`)
     .set(null);
   }
 
@@ -85,7 +103,7 @@ class UserSearchScreen extends Component {
         />
         <List>
           {
-            this.props.userSearchData.map((data) => (
+            this.props.userSearchData.filter(user => user.key !== this.props.user.uid).map((data) => (
               <ListItem
                 title={data.username}
                 key={data.key}
@@ -103,6 +121,10 @@ class UserSearchScreen extends Component {
             ))
           }
         </List>
+        <Button
+          title='Press Me'
+          onPress={() => console.log(this.props.userSearchData)}
+        />
       </View>
     );
   }

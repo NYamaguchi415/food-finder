@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Button } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { retrieveHomeEvents } from '../src/actions/HomeEventsActions';
-// import firebase from '../firebaseInit';
 
 class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Food-Finder',
-    headerRight: (
-      <Button
-        title='F'
-        color='blue'
-        onPress={() => navigation.navigate('Friends')}
+    headerRight:
+      <Icon
+      name={'md-people'}
+      size={30}
+      color='gray'
+      onPress={() => navigation.navigate('HomeFriends')}
       />
-    )
   })
 
   componentDidMount() {
