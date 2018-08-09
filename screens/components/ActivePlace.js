@@ -50,12 +50,9 @@ class ActivePlace extends Component {
             votes: 0,
             price: '',
             distance: '',
-            time: -1,
-
         }
     }
     componentWillMount() {
-        console.log(this.props);
         this.getRestaurantFromYelp(this.props.id);
     }
 

@@ -3,3 +3,6 @@
 node_modules/**/*
 .expo/*
 npm-debug.*
+src/model/Event.ts
+src/model/Models.ts
+src/model/Paths.ts
